@@ -396,7 +396,7 @@ def system_status(settings: SettingsDep, _: StaffDep) -> dict[str, object]:
             {
                 "name": "Document verification",
                 "kind": "simulated",
-                "detail": "Simulated: an uploaded document is accepted as a sample and marked verified",
+                "detail": "Simulated: an uploaded sample document is marked verified",
             },
             {"name": "Biller network", "kind": "simulated", "detail": sim},
             {
