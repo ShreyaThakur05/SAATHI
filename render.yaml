@@ -31,8 +31,8 @@ services:
       - key: SAATHI_SIM_LATENCY_MS
         value: "350"
       - key: SAATHI_CORS_ORIGINS
-        sync: false                  # set after the Vercel deploy, e.g. ["https://your-app.vercel.app"]
+        value: '["http://localhost:3000"]'   # add your own web origin here if you use a custom domain
       - key: SAATHI_CORS_ORIGIN_REGEX
-        sync: false                  # optional: Vercel preview URLs, e.g. https://your-app-.*\.vercel\.app
+        value: 'https://saathi[a-z0-9-]*\.vercel\.app'   # Vercel projects named saathi*, incl. previews. Rename your Vercel project to match, or edit this
       - key: SAATHI_SARVAM_API_KEY
         sync: false                  # optional: turns on language-model understanding

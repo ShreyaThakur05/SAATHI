@@ -11,7 +11,8 @@ The deploy order matters, because each side needs the other's URL: **API first, 
 
 1. In Render: **New, Blueprint**, connect GitHub, choose the SAATHI repo. Render reads
    [`render.yaml`](../render.yaml) and shows two resources: `saathi-api` (Docker web service) and `saathi-db` (Postgres).
-2. Render asks for the variables marked "sync: false". Fill them like this, then **Apply**:
+2. `render.yaml` now pre-fills the CORS settings (it allows Vercel projects whose name starts with `saathi`). Render only asks for
+   the Sarvam key, which is a secret and is never committed. Fill the table below if you want to change anything, then **Apply**:
 
    | Variable | Value |
    |---|---|
