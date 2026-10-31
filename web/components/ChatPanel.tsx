@@ -99,7 +99,9 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
   }, [api, working, lang, handleAuthError]);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    // scroll the chat's own list, never the page behind it
+    const list = endRef.current?.parentElement;
+    if (list) list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
   }, [messages, working]);
   useEffect(() => {
     hostEvent.current?.("saathi:ready");

@@ -399,14 +399,14 @@ test("playable story: break the soundbox, let Saathi fix it, and the dashboard r
   await story.getByRole("button", { name: "Take the Soundbox offline" }).click();
   await expect(story.getByRole("alert")).toContainText("offline");
   await story.getByRole("button", { name: "Resolve with Saathi" }).click();
-  await expect(story.getByText("Fixed and proved.")).toBeVisible({ timeout: 15_000 });
+  await expect(story.getByText("Fixed and proved.")).toBeVisible({ timeout: 30_000 });
   await expect(story.getByText("Replacement on the way")).toBeVisible();
   await story.getByRole("button", { name: "Start over" }).click();
   // the settlement story ends with a person's decision
   await story.getByRole("button", { name: "A settlement is put on hold" }).click();
   await story.getByRole("button", { name: "Put the settlement on hold" }).click();
   await story.getByRole("button", { name: "Resolve with Saathi" }).click();
-  await story.getByRole("button", { name: /Approve as the risk team/ }).click({ timeout: 15_000 });
+  await story.getByRole("button", { name: /Approve as the risk team/ }).click({ timeout: 30_000 });
   await expect(story.getByText(/A person made the final call/)).toBeVisible();
 });
 

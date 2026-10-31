@@ -83,7 +83,9 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
   const speech = useSpeech("hinglish", (spoken) => send(spoken));
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
+    // scroll the chat's own list; scrollIntoView would also scroll the whole page down to this section on load
+    const list = endRef.current?.parentElement;
+    if (list) list.scrollTop = list.scrollHeight;
   }, [messages, typing]);
 
   const fresh = messages.length === 1;
