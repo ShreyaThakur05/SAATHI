@@ -43,15 +43,20 @@ def create_app() -> FastAPI:
         if settings.run_migrations_on_start:
             command.upgrade(Config("alembic.ini"), "head")
         if settings.demo_tools_enabled:
+            from sqlalchemy.exc import SQLAlchemyError
             from sqlalchemy.orm import Session
 
             from app.db.session import get_engine
             from app.seed.demo import seed_demo, seed_staff
 
-            with Session(get_engine()) as session:
-                seed_staff(session)
-                if seed_demo(session):
-                    log.info("demo data seeded")
+            try:
+                with Session(get_engine()) as session:
+                    seed_staff(session)
+                    if seed_demo(session):
+                        log.info("demo data seeded")
+            except SQLAlchemyError:
+                # Come up anyway: /healthz stays green and /readyz reports the database as down.
+                log.exception("demo seeding skipped: database unavailable")
         yield
 
     app = FastAPI(title="Paytm Saathi API", version="0.1.0", lifespan=lifespan)

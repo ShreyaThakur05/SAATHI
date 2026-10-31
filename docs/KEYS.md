@@ -21,6 +21,12 @@ Nothing is required to run locally. Every key below is optional until the stage 
 * **Sarvam speech-to-text**: the same Sarvam key covers it, but server-side STT is not built (the browser's speech
   recognition is used).
 
+## Generated secrets
+
+`SAATHI_JWT_SECRET` and `SAATHI_HOST_API_KEY` are random values you create once (`openssl rand -hex 32`) and store in your
+host's secret manager. Use different values for production than for local development. Never commit them.
+To test a database URL, see "Testing a database URL" in DEPLOY.md.
+
 ## Verify a key works
 
 ```bash

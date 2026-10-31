@@ -17,7 +17,8 @@ export default defineConfig({
       cwd: "../api",
       url: "http://localhost:8000/healthz",
       reuseExistingServer: true,
-      env: { SAATHI_SIM_LATENCY_MS: "120", SAATHI_DEMO_TOOLS_ENABLED: "true", PATH: `${process.env.HOME}/.local/bin:${process.env.PATH}` },
+      env: { SAATHI_SIM_LATENCY_MS: "120", SAATHI_DEMO_TOOLS_ENABLED: "true", SAATHI_SARVAM_API_KEY: "", SAATHI_ANTHROPIC_API_KEY: "", // e2e must be deterministic and never use a live model key
+         PATH: `${process.env.HOME}/.local/bin:${process.env.PATH}` },
       timeout: 60_000,
     },
     {

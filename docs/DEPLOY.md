@@ -18,6 +18,25 @@
 | `SAATHI_API_URL`, `SAATHI_HOST_API_KEY`, `DEMO_MODE` | web (server) | Demo session route only; `DEMO_MODE` unset in production |
 | `FRAME_ANCESTORS` | web | Origins allowed to embed `/chat` |
 
+## Testing a database URL
+
+Hosts such as Neon and Supabase give a URL starting `postgresql://`. Saathi uses the psycopg v3 driver, so change the
+scheme to `postgresql+psycopg://` and keep `?sslmode=require` if the host needs TLS:
+
+```
+SAATHI_DATABASE_URL='postgresql+psycopg://USER:PASSWORD@HOST/DBNAME?sslmode=require'
+```
+
+1. **Connectivity, credentials and permissions:** `cd api && uv run alembic upgrade head`. It connects and creates the
+   tables, so success proves all three. (Plain connectivity only: `psql 'postgresql://...' -c 'select 1'`.)
+2. **The API's own view:** start the API and run `curl localhost:8000/readyz`.
+   * `{"status":"ready","database":"up"}` (HTTP 200): connected.
+   * `{"status":"unavailable","database":"down"}` (HTTP 503): the API is running but cannot reach the database.
+     `/healthz` stays 200 so you can tell "process up" from "database down". Check host, password, TLS and IP allow-lists.
+3. **Data path:** with `SAATHI_DEMO_TOOLS_ENABLED=true` on a *throwaway* database, the API seeds demo data on start;
+   sign in at `/login` as `ramesh@store.example` (password `saathi-demo`) to see it round-trip. Never enable demo
+   tools on a production database.
+
 ## Run everything in containers
 
 ```bash

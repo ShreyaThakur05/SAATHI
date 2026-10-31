@@ -310,3 +310,22 @@ def test_system_status_is_honest_about_what_is_simulated(client: TestClient) -> 
     assert kinds["Payment gateway (Refund and Refund Status APIs)"] == "simulated"
     assert kinds["WhatsApp"] == "not_configured"
     assert client.get("/v1/system/status").status_code == 401
+
+
+def test_api_still_starts_and_reports_not_ready_when_the_database_is_down(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """Demo seeding must not turn a database outage into a crash loop."""
+    import app.main as main
+    from app.db import session as db_session
+
+    bad = Settings(
+        demo_tools_enabled=True, database_url="postgresql+psycopg://u:p@127.0.0.1:1/none"
+    )
+    monkeypatch.setattr(main, "get_settings", lambda: bad)
+    monkeypatch.setattr(db_session, "get_settings", lambda: bad)
+    db_session.get_engine.cache_clear()
+    try:
+        with TestClient(main.create_app()) as c:  # entering runs the lifespan
+            assert c.get("/healthz").status_code == 200
+            assert c.get("/readyz").status_code == 503
+    finally:
+        db_session.get_engine.cache_clear()

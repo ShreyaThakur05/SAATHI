@@ -1,3 +1,4 @@
+import os
 from collections.abc import Iterator
 
 import pytest
@@ -8,6 +9,19 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import get_settings
 from app.db import models  # noqa: F401
 from app.db.base import Base
+
+# Tests must never read a developer's real api/.env (live model keys, production secrets). Environment
+# variables take priority over the env file, so pin the sensitive ones before anything loads Settings.
+for _name, _value in {
+    "SAATHI_SARVAM_API_KEY": "",
+    "SAATHI_ANTHROPIC_API_KEY": "",
+    "SAATHI_LLM_PROVIDER": "auto",
+    "SAATHI_JWT_SECRET": "dev-only-change-me-not-for-production-use",
+    "SAATHI_HOST_API_KEY": "dev-host-key",
+    "SAATHI_DEMO_TOOLS_ENABLED": "false",
+    "SAATHI_ENV": "local",
+}.items():
+    os.environ[_name] = _value
 
 pytest_plugins = ["tests.api_fixtures"]
 
