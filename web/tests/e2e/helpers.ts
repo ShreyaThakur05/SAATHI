@@ -28,6 +28,7 @@ export function watchConsole(page: Page) {
     if (m.type() !== "error") return;
     const text = m.text();
     if (/Failed to load resource.*(401|404|409)/.test(text)) return; // expected in negative-path tests
+    if (m.location().url.includes("tile.openstreetmap.org")) return; // map tiles need the internet
     problems.push(`console.error: ${text}`);
   });
   return problems;

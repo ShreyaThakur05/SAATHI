@@ -107,6 +107,19 @@ dashboard: when Saathi reverses rent, creates a replacement, refunds a bill or a
 shows it because the underlying system changed. Help-request steps shown to merchants exclude rule internals and evidence.
 Alerts carry a pre-written message in the merchant's own language, so "Resolve with Saathi" is one click.
 
+## Location, profile and live device view
+
+* `services/telemetry.py` produces **simulated** heartbeats, signal and a connection path
+  (device, cell site, gateway) as a deterministic function of the device's state in the simulated systems, so the picture
+  always agrees with the data and consecutive polls form one consistent series. It also returns the newest Saathi case
+  on that device with its steps, which is what the 3D scene shows live.
+* `merchant_view.profile` builds the profile, simulated coordinates (shop, one pin per device, a nearby cell site) and a
+  single history timeline (cases, actions with their proof status, settlements). Staff read the same data through
+  `/v1/merchants/{id}/profile`; a merchant can only ever read their own devices.
+* Web: Leaflet with OpenStreetMap tiles for the map, and three.js (react-three-fiber) for the scene, both loaded lazily
+  on the client. The scene's logic (`lib/scene.ts`) is pure and unit-tested; it falls back to text readings without WebGL
+  and slows its motion for `prefers-reduced-motion`.
+
 ## Auth
 
 * Staff: email + scrypt-hashed password → HS256 JWT (`scope=staff`, role). Roles: AGENT (read), RISK_APPROVER, ADMIN.

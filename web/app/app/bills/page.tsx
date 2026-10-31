@@ -8,6 +8,9 @@ import { useMerchantQuery } from "@/lib/merchantAuth";
 
 export default function Bills() {
   const q = useMerchantQuery(["bills"], (api) => api.bills());
+  const overview = useMerchantQuery(["overview"], (api) => api.overview());
+  const askFor = (txn: string, biller: string) =>
+    overview.data?.alerts.find((a) => a.id === `bill-${txn}`)?.ask ?? `My ${biller} bill payment failed but the money was debited`;
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader title="Bills and refunds" subtitle="Bill payments and recharges you made, and any refunds." />
@@ -29,7 +32,7 @@ export default function Bills() {
                     <Chip status={b.biller_status === "SUCCESS" ? "SUCCESS" : b.biller_status} label={b.biller_status === "SUCCESS" ? "Bill paid" : b.biller_status === "FAILED" ? "Bill failed" : "Bill pending"} />
                     {b.refund && <Chip status={b.refund.status} label={b.refund.status === "SUCCESS" ? "Refunded" : `Refund ${b.refund.status.toLowerCase()}`} />}
                   </div>
-                  {needsRefund && <AskSaathiButton text={`My ${b.biller} bill payment failed but the money was debited`} label="Get my refund" />}
+                  {needsRefund && <AskSaathiButton text={askFor(b.txn, b.biller)} label="Get my refund" />}
                   {b.refund && <p className="basis-full font-mono text-xs text-muted">Refund reference {b.refund.refund_id}</p>}
                 </li>
               );

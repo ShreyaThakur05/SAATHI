@@ -37,7 +37,7 @@ export function CaseView({ caseId, embedded = false }: { caseId: number; embedde
         <div>
           <h1 className={embedded ? "text-base font-bold text-navy" : "text-2xl font-bold text-navy"}>{c.summary}</h1>
           <p className="mt-1 text-sm text-muted">
-            Case #{c.id} · {c.merchant_name ?? `Merchant ${c.merchant_id}`} · {humanize(c.product.toLowerCase())}
+            Case #{c.id} · <Link href={`/console/merchants/${c.merchant_id}`} className="font-medium text-navy-2 hover:underline">{c.merchant_name ?? `Merchant ${c.merchant_id}`}</Link> · {humanize(c.product.toLowerCase())}
           </p>
         </div>
         <StatusPill status={c.status} />

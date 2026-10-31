@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { Activity, CreditCard, Home, LifeBuoy, Receipt, Router } from "lucide-react";
+import { Activity, CreditCard, Home, LifeBuoy, Receipt, Router, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -18,6 +18,7 @@ const NAV = [
   { href: "/app/bills", label: "Bills and refunds", icon: Receipt },
   { href: "/app/transactions", label: "Transactions", icon: Activity },
   { href: "/app/help", label: "Help requests", icon: LifeBuoy },
+  { href: "/app/profile", label: "Profile", icon: UserRound },
 ];
 
 const DONE_COPY: Record<string, string> = {

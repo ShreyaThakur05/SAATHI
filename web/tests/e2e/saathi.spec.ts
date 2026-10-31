@@ -98,6 +98,71 @@ test("sign out is always visible in the top bar", async ({ page }) => {
   await expect(page).toHaveURL(/\/login/);
 });
 
+test("devices: live connection view shows the broken hop, then Saathi's work and the replacement", async ({ page }) => {
+  const problems = watchConsole(page);
+  await loginMerchant(page, "ramesh@store.example");
+  await page.getByRole("link", { name: "Devices" }).click();
+
+  // the 3D scene and the readings agree with the device record
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.getByText("Not connected")).toBeVisible();
+  await expect(page.getByText(/cannot reach the cell site/)).toBeVisible();
+  await expect(page.getByText("24 of 24")).toBeVisible(); // every recent heartbeat missed
+  await expect(page.getByText("Simulated telemetry")).toBeVisible();
+
+  // one click: the message is in the merchant's own language (Hindi), and the work is shown live
+  await page.getByRole("button", { name: "Fix with Saathi" }).click();
+  await expect(chat(page).getByText(/साउंडबॉक्स/).first()).toBeVisible();
+  await expect(chat(page).getByText(/RPL-\d+/)).toBeVisible();
+  await closeChat(page);
+  await expect(page.getByText(/What Saathi did on request #\d+/)).toBeVisible();
+  await expect(page.getByText(/PROVE · Re-checked: order RPL-/)).toBeVisible();
+  await expect(page.getByText("Replacement on the way")).toBeVisible();
+  expect(problems).toEqual([]);
+});
+
+test("profile: shop on a map with its devices and cell site, live connection, and full history", async ({ page }) => {
+  const problems = watchConsole(page);
+  await loginMerchant(page, "ramesh@store.example");
+  await page.getByRole("link", { name: "Profile" }).click();
+  await expect(page.getByText("Shop 12, Itwari Market, Nagpur")).toBeVisible();
+  await expect(page.getByRole("region", { name: /Map of the shop/ })).toBeVisible();
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(3); // shop, cell site, device
+  await expect(page.getByText("Simulated location")).toBeVisible();
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "History" })).toBeVisible();
+  await expect(page.getByText("Joined")).toBeVisible();
+  await expect(page.getByText("Settled to bank").first()).toBeVisible();
+  expect(problems).toEqual([]);
+});
+
+test("history records what Saathi did, and a repaired card machine shows as connected", async ({ page }) => {
+  await loginMerchant(page, "seema@store.example");
+  await page.getByRole("link", { name: "Devices" }).click();
+  await expect(page.getByText("Not connected")).toBeVisible();
+  await expect(page.getByText(/has a fault/)).toBeVisible(); // it has signal but is not responding
+  await page.getByRole("button", { name: "Fix with Saathi" }).click();
+  await expect(page.getByText("Connected", { exact: true })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("0 of 24")).toBeVisible();
+  await page.getByRole("link", { name: "Profile" }).click();
+  await expect(page.getByText("Device re-paired")).toBeVisible();
+});
+
+test("console merchant 360: search, location, live device view and history", async ({ page }) => {
+  const problems = watchConsole(page);
+  await loginStaff(page, "risk@paytm.demo");
+  await page.getByRole("link", { name: "Merchants" }).click();
+  await expect(page.getByText("Anil Electronics")).toBeVisible();
+  await page.getByLabel("Search merchants").fill("nagp");
+  await expect(page.getByText("Anil Electronics")).toBeHidden();
+  await page.getByRole("link", { name: /Ramesh General Store/ }).click();
+  await expect(page.getByText("Shop 12, Itwari Market, Nagpur")).toBeVisible();
+  await expect(page.locator(".leaflet-marker-icon")).toHaveCount(3);
+  await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.getByText(/cannot reach the cell site/)).toBeVisible();
+  expect(problems).toEqual([]);
+});
+
 test("card machine: Saathi re-pairs it and the device page shows it online", async ({ page }) => {
   await loginMerchant(page, "seema@store.example");
   await page.getByRole("link", { name: "Devices" }).click();
@@ -283,7 +348,7 @@ test.describe("accessibility", () => {
       expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`)).toEqual([]);
     });
   }
-  for (const path of ["/app", "/app/devices", "/app/settlements", "/app/bills", "/app/transactions", "/app/help"]) {
+  for (const path of ["/app", "/app/devices", "/app/settlements", "/app/bills", "/app/transactions", "/app/help", "/app/profile"]) {
     test(`no serious axe violations on dashboard ${path}`, async ({ page }) => {
       await loginMerchant(page, "anil@store.example");
       await page.goto(path);

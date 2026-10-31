@@ -1,12 +1,14 @@
 "use client";
 
 import clsx from "clsx";
-import { Check, CreditCard, Speaker, Truck } from "lucide-react";
+import { Check, CreditCard, Radio, Speaker, Truck } from "lucide-react";
+import { useState } from "react";
+import { DeviceLive } from "@/components/DeviceLive";
 import { AskSaathiButton, PageHeader } from "@/components/MerchantBits";
 import { Chip } from "@/components/Chip";
 import { Card, EmptyState, ErrorState, Skeleton } from "@/components/ui/primitives";
 import { formatDate, formatDuration, formatInr } from "@/lib/format";
-import { useMerchantQuery } from "@/lib/merchantAuth";
+import { useMerchant, useMerchantQuery } from "@/lib/merchantAuth";
 import type { MerchantDevice } from "@/lib/types";
 
 function Replacement({ r }: { r: NonNullable<MerchantDevice["replacement"]> }) {
@@ -38,7 +40,9 @@ function Replacement({ r }: { r: NonNullable<MerchantDevice["replacement"]> }) {
   );
 }
 
-function DeviceCard({ d }: { d: MerchantDevice }) {
+function DeviceCard({ d, defaultOpen, ask }: { d: MerchantDevice; defaultOpen: boolean; ask?: string }) {
+  const { api, token } = useMerchant();
+  const [live, setLive] = useState(defaultOpen);
   const Icon = d.kind === "SOUNDBOX" ? Speaker : CreditCard;
   const name = d.kind === "SOUNDBOX" ? "Soundbox" : "Card machine";
   const needsHelp = d.status === "OFFLINE" && !d.replacement;
@@ -61,11 +65,21 @@ function DeviceCard({ d }: { d: MerchantDevice }) {
         {d.kind === "CARD_MACHINE" && <div><dt className="text-xs text-muted">Pairing</dt><dd className="font-medium">{d.pairing_ok ? "Paired" : "Not paired"}</dd></div>}
         {d.monthly_rent_inr && <div><dt className="text-xs text-muted">Monthly rent</dt><dd className="font-medium">{formatInr(d.monthly_rent_inr)}</dd></div>}
       </dl>
+      <div className="mt-4">
+        <button type="button" onClick={() => setLive((v) => !v)} aria-expanded={live} className="flex items-center gap-2 text-sm font-semibold text-navy-2 hover:underline">
+          <Radio className="size-4" aria-hidden /> {live ? "Hide live connection" : "Show live connection"}
+        </button>
+        {live && api && (
+          <div className="mt-3">
+            <DeviceLive queryKey={["m", token, "diag", d.id]} fetcher={() => api.diagnostics(d.id)} kind={d.kind} />
+          </div>
+        )}
+      </div>
       {d.replacement && <Replacement r={d.replacement} />}
       {needsHelp && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-danger/5 p-4">
           <p className="text-sm text-ink">This device isn&rsquo;t connecting. Saathi can try a remote fix and arrange a replacement.</p>
-          <AskSaathiButton text={`My ${name.toLowerCase()} ${d.serial} is offline${d.offline_hours ? ` for ${d.offline_hours} hours` : ""}`} label="Fix with Saathi" />
+          <AskSaathiButton text={ask ?? `My ${name.toLowerCase()} ${d.serial} is offline`} label="Fix with Saathi" />
         </div>
       )}
     </Card>
@@ -74,13 +88,16 @@ function DeviceCard({ d }: { d: MerchantDevice }) {
 
 export default function Devices() {
   const q = useMerchantQuery(["devices"], (api) => api.devices());
+  // the server writes the help message in the merchant's own language
+  const overview = useMerchantQuery(["overview"], (api) => api.overview());
+  const askFor = (id: number) => overview.data?.alerts.find((a) => a.id === `dev-${id}`)?.ask;
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader title="Devices" subtitle="Your Soundbox and card machines." />
       {q.isPending ? <Skeleton className="h-56" /> : q.isError ? <ErrorState message={q.error.message} onRetry={() => q.refetch()} /> : q.data.length === 0 ? (
         <Card><EmptyState title="No devices on your account" body="Devices you rent or buy from us will show up here." /></Card>
       ) : (
-        <div className="space-y-4">{q.data.map((d) => <DeviceCard key={d.id} d={d} />)}</div>
+        <div className="space-y-4">{q.data.map((d, i) => <DeviceCard key={d.id} d={d} defaultOpen={i === 0} ask={askFor(d.id)} />)}</div>
       )}
     </div>
   );

@@ -32,11 +32,13 @@ from app.db.models import (
     Case,
     CaseStep,
     Conversation,
+    Device,
     Merchant,
     Message,
     User,
 )
 from app.domain.types import TERMINAL_STATUSES, CaseStatus
+from app.services import merchant_view, telemetry
 from app.services.intake import intake_message
 from app.services.messaging import render_in
 from app.services.metrics import compute_metrics
@@ -372,6 +374,56 @@ def skill_packs(rt: RuntimeDep, _: StaffDep) -> list[sc.SkillPackOut]:
         )
         for pack in rt.registry.all()
     ]
+
+
+@router.get("/merchants", tags=["console"])
+def list_merchants(
+    session: SessionDep,
+    _: StaffDep,
+    q: Annotated[str | None, Query(max_length=60)] = None,
+) -> list[dict[str, object]]:
+    stmt = select(Merchant).order_by(Merchant.name)
+    if q:
+        like = f"%{q.strip()}%"
+        stmt = stmt.where(Merchant.name.ilike(like) | Merchant.city.ilike(like))
+    out = []
+    for m in session.scalars(stmt.limit(100)):
+        open_cases = session.scalar(
+            select(func.count())
+            .select_from(Case)
+            .where(
+                Case.merchant_id == m.id, Case.status.not_in([s.value for s in TERMINAL_STATUSES])
+            )
+        )
+        out.append(
+            {
+                "id": m.id,
+                "name": m.name,
+                "city": m.city,
+                "category": m.category,
+                "kyc_status": m.kyc_status,
+                "open_cases": open_cases or 0,
+            }
+        )
+    return out
+
+
+@router.get("/merchants/{merchant_id}/profile", tags=["console"])
+def merchant_360(merchant_id: int, session: SessionDep, _: StaffDep) -> dict[str, object]:
+    merchant = session.get(Merchant, merchant_id)
+    if merchant is None:
+        raise AppError("unknown_merchant", "Merchant not found", 404)
+    return merchant_view.profile(session, merchant)
+
+
+@router.get("/merchants/{merchant_id}/devices/{device_id}/diagnostics", tags=["console"])
+def merchant_device_diagnostics(
+    merchant_id: int, device_id: int, session: SessionDep, _: StaffDep
+) -> dict[str, object]:
+    device = session.get(Device, device_id)
+    if device is None or device.merchant_id != merchant_id:
+        raise AppError("unknown_device", "Device not found", 404)
+    return telemetry.diagnostics(session, device)
 
 
 @router.get("/system/status", tags=["console"])

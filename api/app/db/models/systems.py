@@ -29,6 +29,12 @@ class Merchant(Base):
     password_hash: Mapped[str | None] = mapped_column(String(256))
     city: Mapped[str] = mapped_column(String(64), default="")
     category: Mapped[str] = mapped_column(String(64), default="")
+    address: Mapped[str] = mapped_column(String(160), default="", server_default="")
+    lat: Mapped[float | None]  # simulated shop location
+    lng: Mapped[float | None]
+    member_since: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
 
 class Device(Base):

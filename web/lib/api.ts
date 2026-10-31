@@ -7,11 +7,14 @@ import type {
   CaseDetail,
   CaseSummary,
   ChatMessage,
+  Diagnostics,
   HelpRequest,
   LedgerItem,
   MerchantBill,
   MerchantDevice,
+  MerchantListItem,
   MerchantOverview,
+  MerchantProfile,
   MerchantSettlements,
   Metrics,
   Page,
@@ -92,6 +95,10 @@ export const staffApi = (token: string | null) => ({
     request<Page<AuditEntry>>(`/v1/audit${qs(p)}`, { token }),
   metrics: () => request<Metrics>("/v1/metrics", { token }),
   skillPacks: () => request<SkillPack[]>("/v1/skill-packs", { token }),
+  merchants: (q?: string) => request<MerchantListItem[]>(`/v1/merchants${qs({ q })}`, { token }),
+  merchantProfile: (id: number) => request<MerchantProfile>(`/v1/merchants/${id}/profile`, { token }),
+  merchantDiagnostics: (merchantId: number, deviceId: number) =>
+    request<Diagnostics>(`/v1/merchants/${merchantId}/devices/${deviceId}/diagnostics`, { token }),
   systemStatus: () => request<SystemStatus>("/v1/system/status", { token }),
   demoReset: () => request<{ seeded: Record<string, number> }>("/v1/demo/reset", { method: "POST", token }),
 });
@@ -110,6 +117,8 @@ export const merchantApi = (token: string) => ({
   bills: () => request<MerchantBill[]>("/v1/merchant/bills", { token }),
   activity: () => request<LedgerItem[]>("/v1/merchant/activity", { token }),
   helpRequests: () => request<HelpRequest[]>("/v1/merchant/help-requests", { token }),
+  profile: () => request<MerchantProfile>("/v1/merchant/profile", { token }),
+  diagnostics: (deviceId: number) => request<Diagnostics>(`/v1/merchant/devices/${deviceId}/diagnostics`, { token }),
   send: (text: string, inputMode: "text" | "voice", conversationId: number | null) =>
     request<{ conversation_id: number; message_id: number; case_ids: number[] }>("/v1/messages", {
       method: "POST",

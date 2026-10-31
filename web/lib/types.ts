@@ -244,3 +244,69 @@ export interface SystemStatus {
   demo_tools_enabled: boolean;
   sim_latency_ms: number;
 }
+
+// ---- profile, location, diagnostics
+export type HopState = "ok" | "degraded" | "down";
+
+export interface Diagnostics {
+  source: string;
+  device: { id: number; kind: "SOUNDBOX" | "CARD_MACHINE"; serial: string; status: "ONLINE" | "OFFLINE"; pairing_ok: boolean };
+  signal: { quality: "GOOD" | "WEAK" | "NONE"; dbm: number };
+  heartbeat: {
+    interval_s: number;
+    last_seen_at: string;
+    median_rtt_ms: number | null;
+    missed_recent: number;
+    window: number;
+    series: { t: string; rtt_ms: number | null }[];
+  };
+  path: { device: "ok" | "fault"; link_tower: HopState; link_gateway: HopState; failing_hop: "device" | "device_tower" | null };
+  work: {
+    case_id: number;
+    summary: string;
+    status: CaseStatus;
+    active: boolean;
+    steps: { seq: number; kind: StepKind; status: "OK" | "FAILED" | "INFO"; title: string; at: string }[];
+  } | null;
+  as_of: string;
+}
+
+export interface HistoryEvent {
+  ts: string;
+  kind: "case" | "device" | "money" | "kyc" | "account" | "action";
+  title: string;
+  detail: string;
+  status: string;
+}
+
+export interface MerchantProfile {
+  merchant: {
+    id: number;
+    name: string;
+    email: string | null;
+    category: string;
+    city: string;
+    address: string;
+    language: Lang;
+    kyc_status: string;
+    member_since: string;
+  };
+  stats: { collections_inr: Money; collections_count: number; devices: number; requests: number; resolved: number; solved_by_saathi: number };
+  location: {
+    source: string;
+    shop: { lat: number; lng: number; label: string };
+    devices: { id: number; kind: string; serial: string; status: string; lat: number; lng: number }[];
+    tower: { lat: number; lng: number; label: string };
+  } | null;
+  devices: MerchantDevice[];
+  history: HistoryEvent[];
+}
+
+export interface MerchantListItem {
+  id: number;
+  name: string;
+  city: string;
+  category: string;
+  kyc_status: string;
+  open_cases: number;
+}

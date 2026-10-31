@@ -8,8 +8,8 @@ from sqlalchemy import select
 from app.api.deps import MerchantDep, SessionDep, SettingsDep, login_ip_limiter, login_limiter
 from app.core.errors import AppError
 from app.core.security import issue_token, verify_password
-from app.db.models import Merchant
-from app.services import merchant_view
+from app.db.models import Device, Merchant
+from app.services import merchant_view, telemetry
 
 router = APIRouter(prefix="/v1/merchant", tags=["merchant dashboard"])
 
@@ -82,3 +82,18 @@ def activity(session: SessionDep, auth: MerchantDep) -> list[dict[str, Any]]:
 @router.get("/help-requests")
 def help_requests(session: SessionDep, auth: MerchantDep) -> list[dict[str, Any]]:
     return merchant_view.help_requests(session, _merchant(session, auth).id)
+
+
+@router.get("/profile")
+def merchant_profile(session: SessionDep, auth: MerchantDep) -> dict[str, Any]:
+    return merchant_view.profile(session, _merchant(session, auth))
+
+
+@router.get("/devices/{device_id}/diagnostics")
+def device_diagnostics(device_id: int, session: SessionDep, auth: MerchantDep) -> dict[str, Any]:
+    device = session.get(Device, device_id)
+    if (
+        device is None or device.merchant_id != auth.merchant_id
+    ):  # never reveal other merchants' devices
+        raise AppError("unknown_device", "Device not found", 404)
+    return telemetry.diagnostics(session, device)

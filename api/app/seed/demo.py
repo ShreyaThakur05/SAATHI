@@ -69,6 +69,10 @@ def seed_demo(session: Session, now: datetime | None = None) -> dict[str, int]:
         email="ramesh@store.example",
         password_hash=pw,
         city="Nagpur",
+        address="Shop 12, Itwari Market, Nagpur",
+        lat=21.1458,
+        lng=79.0882,
+        member_since=now - timedelta(days=412),
         category="Grocery",
     )
     seema = Merchant(
@@ -77,6 +81,10 @@ def seed_demo(session: Session, now: datetime | None = None) -> dict[str, int]:
         email="seema@store.example",
         password_hash=pw,
         city="Pune",
+        address="14 FC Road, Pune",
+        lat=18.5196,
+        lng=73.8410,
+        member_since=now - timedelta(days=268),
         category="Clothing",
     )
     anil = Merchant(
@@ -86,6 +94,10 @@ def seed_demo(session: Session, now: datetime | None = None) -> dict[str, int]:
         email="anil@store.example",
         password_hash=pw,
         city="Indore",
+        address="Shop 7, Siyaganj, Indore",
+        lat=22.7196,
+        lng=75.8577,
+        member_since=now - timedelta(days=655),
         category="Electronics",
     )
     priya = Merchant(
@@ -94,6 +106,10 @@ def seed_demo(session: Session, now: datetime | None = None) -> dict[str, int]:
         email="priya@store.example",
         password_hash=pw,
         city="Jaipur",
+        address="Stall 3, Johari Bazaar, Jaipur",
+        lat=26.9210,
+        lng=75.8270,
+        member_since=now - timedelta(days=190),
         category="Mobile and recharge",
     )
     session.add_all([ramesh, seema, anil, priya])

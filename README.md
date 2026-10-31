@@ -27,6 +27,12 @@ cd ../web && npm ci && cp .env.example .env.local && npm run dev          # http
 | `/embed-demo` | How Saathi drops into a *different* host dashboard through `<saathi-widget>`. |
 | `localhost:8000/docs` | The API's OpenAPI documentation. |
 
+**New in the dashboard:** a **Profile** page (business details, a map of the shop with its devices and nearest cell
+site, live device connections, and a full history timeline) and a **live connection view** on each device: a 3D scene of
+device, cell site and Paytm gateway with heartbeat pulses. While Saathi works on a device you can watch it probe, send the
+restart command and wait for a heartbeat. Staff get the same view per merchant under **Console, Merchants**.
+Locations and heartbeat telemetry are **simulated** (the map tiles themselves are real OpenStreetMap).
+
 A good first walkthrough: sign in as Ramesh, click **Resolve with Saathi** on the offline alert, watch the replacement
 appear on **Devices**, click it on the rent alert, then see the credit in **Transactions** and the verified steps under
 **Help requests**. For the human-in-the-loop path, sign in as Anil, resolve the settlement alert, upload the GST document

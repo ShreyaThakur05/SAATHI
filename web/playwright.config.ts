@@ -10,7 +10,16 @@ export default defineConfig({
   fullyParallel: false,
   reporter: [["list"]],
   use: { baseURL: "http://localhost:3000", trace: "retain-on-failure" },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // software WebGL so the 3D connection view renders in headless runs
+        launchOptions: { args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] },
+      },
+    },
+  ],
   webServer: [
     {
       command: "uv run uvicorn app.main:app --port 8000",

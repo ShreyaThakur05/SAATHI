@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { BookOpen, ClipboardList, Gauge, Inbox, ScrollText, Settings } from "lucide-react";
+import { BookOpen, ClipboardList, Gauge, Inbox, ScrollText, Settings, Store } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import { useStaff, useStaffQuery } from "@/lib/auth";
 const NAV = [
   { href: "/console", label: "Cases", icon: ClipboardList },
   { href: "/console/approvals", label: "Approvals", icon: Inbox },
+  { href: "/console/merchants", label: "Merchants", icon: Store },
   { href: "/console/insights", label: "Insights", icon: Gauge },
   { href: "/console/audit", label: "Audit log", icon: ScrollText },
   { href: "/console/skill-packs", label: "Skill Packs", icon: BookOpen },

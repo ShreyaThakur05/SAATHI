@@ -28,7 +28,7 @@ from app.db.models import (
     Settlement,
     SimulatedRefund,
 )
-from app.domain.types import TERMINAL_STATUSES
+from app.domain.types import TERMINAL_STATUSES, CaseStatus
 
 IST_OFFSET = timedelta(hours=5, minutes=30)
 
@@ -430,4 +430,149 @@ def overview(session: Session, merchant: Merchant, now: datetime | None = None) 
         },
         "open_help_requests": open_requests,
         "alerts": alerts,
+    }
+
+
+_ACTION_EVENT = {
+    "remote_fix": ("Remote restart attempted", "device"),
+    "repair_device": ("Device re-paired", "device"),
+    "replace_device": ("Replacement ordered", "device"),
+    "reverse_rent": ("Rent reversed", "money"),
+    "refund_bill": ("Bill payment refunded", "money"),
+    "release_settlement_hold": ("Settlement hold released", "money"),
+    "request_document": ("Document requested", "kyc"),
+}
+
+
+def history(session: Session, merchant: Merchant, limit: int = 40) -> list[dict[str, Any]]:
+    """One timeline of everything that happened on the account, newest first."""
+    events: list[dict[str, Any]] = []
+    for c in session.scalars(select(Case).where(Case.merchant_id == merchant.id)):
+        events.append(
+            {
+                "ts": _utc(c.created_at),
+                "kind": "case",
+                "title": f"Asked for help: {c.summary}",
+                "detail": f"Request #{c.id}",
+                "status": "OPEN",
+            }
+        )
+        if c.resolved_at:
+            events.append(
+                {
+                    "ts": _utc(c.resolved_at),
+                    "kind": "case",
+                    "title": f"Request #{c.id} {c.status.lower()}",
+                    "detail": c.summary,
+                    "status": c.status,
+                }
+            )
+    rows = session.execute(
+        select(ActionRecord, Case)
+        .join(Case, Case.id == ActionRecord.case_id)
+        .where(Case.merchant_id == merchant.id)
+    )
+    for a, c in rows:
+        title, kind = _ACTION_EVENT.get(a.name, (a.name.replace("_", " ").title(), "action"))
+        ok = a.status == "DONE"
+        events.append(
+            {
+                "ts": _utc(a.created_at),
+                "kind": kind,
+                "title": title if ok else f"{title}: did not work",
+                "detail": a.reference or f"Request #{c.id}",
+                "status": "SUCCESS" if ok and a.proved is not False else "FAILED",
+            }
+        )
+    for st in session.scalars(select(Settlement).where(Settlement.merchant_id == merchant.id)):
+        label = {
+            "PAID": "Settled to bank",
+            "HELD": "Settlement put on hold",
+            "RELEASED": "Settlement released",
+        }[st.status]
+        events.append(
+            {
+                "ts": _utc(st.created_at),
+                "kind": "money",
+                "title": label,
+                "detail": f"₹{st.amount_inr:,.0f}",
+                "status": st.status,
+            }
+        )
+    events.append(
+        {
+            "ts": _utc(merchant.member_since),
+            "kind": "account",
+            "title": "Joined",
+            "detail": merchant.name,
+            "status": "SUCCESS",
+        }
+    )
+    events.sort(key=lambda e: e["ts"], reverse=True)
+    return events[:limit]
+
+
+def _location(merchant: Merchant, devs: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Simulated coordinates: the shop, a pin per device, and the nearest cell site."""
+    lat, lng = merchant.lat, merchant.lng
+    if lat is None or lng is None:
+        return None
+    return {
+        "source": "simulated location",
+        "shop": {"lat": lat, "lng": lng, "label": merchant.address or merchant.name},
+        "devices": [
+            {
+                "id": d["id"],
+                "kind": d["kind"],
+                "serial": d["serial"],
+                "status": d["status"],
+                "lat": lat + 0.00025 * (i + 1),
+                "lng": lng + 0.00025 * (i + 1),
+            }
+            for i, d in enumerate(devs)
+        ],
+        "tower": {
+            "lat": lat + 0.0042,
+            "lng": lng - 0.0031,
+            "label": "Nearest cell site (simulated)",
+        },
+    }
+
+
+def profile(session: Session, merchant: Merchant, now: datetime | None = None) -> dict[str, Any]:
+    now = now or datetime.now(UTC)
+    devs = devices(session, merchant.id, now)
+    lifetime = session.execute(
+        select(func.coalesce(func.sum(Collection.amount_inr), 0), func.count()).where(
+            Collection.merchant_id == merchant.id
+        )
+    ).one()
+    cases = list(session.scalars(select(Case).where(Case.merchant_id == merchant.id)))
+    return {
+        "merchant": {
+            "id": merchant.id,
+            "name": merchant.name,
+            "email": merchant.email,
+            "category": merchant.category,
+            "city": merchant.city,
+            "address": merchant.address,
+            "language": merchant.language,
+            "kyc_status": merchant.kyc_status,
+            "member_since": _utc(merchant.member_since),
+        },
+        "stats": {
+            "collections_inr": Decimal(lifetime[0]),
+            "collections_count": int(lifetime[1]),
+            "devices": len(devs),
+            "requests": len(cases),
+            "resolved": sum(1 for c in cases if c.status == CaseStatus.RESOLVED.value),
+            "solved_by_saathi": sum(
+                1
+                for c in cases
+                if c.status == CaseStatus.RESOLVED.value and not c.handled_by_person
+            ),
+        },
+        "location": _location(merchant, devs),
+        "devices": devs,
+        "history": history(session, merchant),
     }
