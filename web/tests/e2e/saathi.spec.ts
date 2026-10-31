@@ -20,7 +20,7 @@ test("landing offers both entry points; the dashboard is protected", async ({ pa
   const problems = watchConsole(page);
   await page.goto("/");
   await expect(page.getByRole("heading", { name: /Problems solved, not just answered/ })).toBeVisible();
-  await page.getByRole("link", { name: /I.m a merchant/ }).click();
+  await page.getByRole("link", { name: /Sign in as a merchant/ }).click();
   await expect(page).toHaveURL(/\/login/);
   await page.goto("/app/devices");
   await expect(page).toHaveURL(/\/login/); // no session, no dashboard
@@ -73,6 +73,29 @@ test("soundbox journey: alert -> Saathi fixes it -> dashboard shows the replacem
   await expect(page.getByText("Resolved", { exact: true })).toHaveCount(2);
   await expect(page.getByText(/Re-checked: reversal RV-\d+ status SUCCESS/)).toBeVisible();
   expect(problems).toEqual([]);
+});
+
+test("switching language converts the whole conversation, not just new messages", async ({ page }) => {
+  await loginMerchant(page, "ramesh@store.example"); // a Hindi-language merchant
+  await resolveWithSaathi(page, /Soundbox SB-77120 is offline/);
+  await expect(chat(page).getByText(/रिमोट फिक्स/)).toBeVisible(); // reply arrives in Hindi
+  await chat(page).getByRole("button", { name: "EN", exact: true }).click();
+  await expect(chat(page).getByText(/The remote fix did not work/)).toBeVisible();
+  await expect(chat(page).getByText(/रिमोट फिक्स/)).toHaveCount(0); // nothing left behind in Hindi
+  await expect(chat(page).getByText("DONE", { exact: false }).first()).toBeVisible();
+  await chat(page).getByRole("button", { name: "Hinglish", exact: true }).click();
+  await expect(chat(page).getByText(/Remote fix kaam nahi aaya/)).toBeVisible();
+  // the references never change with the language
+  await expect(chat(page).getByText(/RPL-\d+/)).toBeVisible();
+});
+
+test("sign out is always visible in the top bar", async ({ page }) => {
+  await loginMerchant(page, "ramesh@store.example");
+  await page.getByRole("link", { name: "Settlements" }).click();
+  const out = page.getByRole("button", { name: "Sign out" });
+  await expect(out).toBeVisible();
+  await out.click();
+  await expect(page).toHaveURL(/\/login/);
 });
 
 test("card machine: Saathi re-pairs it and the device page shows it online", async ({ page }) => {

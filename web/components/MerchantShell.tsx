@@ -1,14 +1,14 @@
 "use client";
 
 import clsx from "clsx";
-import { Activity, CreditCard, Home, LifeBuoy, LogOut, Receipt, Router } from "lucide-react";
+import { Activity, CreditCard, Home, LifeBuoy, Receipt, Router } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useMerchant, useMerchantQuery } from "@/lib/merchantAuth";
-import { EnvBanner } from "./EnvBanner";
 import { SaathiProvider } from "./SaathiDock";
 import { ToastProvider, useToast } from "./Toaster";
+import { TopBar } from "./TopBar";
 import { Badge, Skeleton } from "./ui/primitives";
 
 const NAV = [
@@ -63,9 +63,6 @@ function Inner({ children }: { children: React.ReactNode }) {
               <p className="text-lg font-bold text-navy">Business <span className="text-brand-ink">dashboard</span></p>
               <p className="max-w-44 truncate text-xs text-muted">{merchant?.name}</p>
             </Link>
-            <button onClick={logout} aria-label="Sign out" className="rounded p-2 text-muted hover:bg-surface lg:hidden">
-              <LogOut className="size-4" />
-            </button>
           </div>
           <nav aria-label="Dashboard" className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">
             {NAV.map(({ href, label, icon: Icon }) => {
@@ -87,15 +84,15 @@ function Inner({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-          <div className="mt-6 hidden border-t border-line px-5 py-4 lg:block">
-            <p className="truncate text-sm font-medium">{merchant?.name}</p>
-            <p className="text-xs text-muted">{overview.data?.merchant.city}{overview.data?.merchant.category ? ` · ${overview.data.merchant.category}` : ""}</p>
-            <button onClick={logout} className="mt-3 flex items-center gap-2 text-xs text-muted hover:text-ink">
-              <LogOut className="size-3.5" aria-hidden /> Sign out
-            </button>
-          </div>
         </aside>
-        <main className="min-w-0 flex-1 p-4 pb-24 sm:p-6 lg:p-8">{children}</main>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <TopBar
+            title={merchant?.name ?? ""}
+            subtitle={overview.data ? `${overview.data.merchant.city} · ${overview.data.merchant.category}` : undefined}
+            onSignOut={logout}
+          />
+          <main className="flex-1 p-4 pb-24 sm:p-6 lg:p-8">{children}</main>
+        </div>
       </div>
     </SaathiProvider>
   );
@@ -116,7 +113,6 @@ export function MerchantShell({ children }: { children: React.ReactNode }) {
   }
   return (
     <ToastProvider>
-      <EnvBanner />
       <Inner>{children}</Inner>
     </ToastProvider>
   );

@@ -1,11 +1,11 @@
 "use client";
 
 import clsx from "clsx";
-import { BookOpen, ClipboardList, Gauge, Inbox, LogOut, ScrollText, Settings } from "lucide-react";
+import { BookOpen, ClipboardList, Gauge, Inbox, ScrollText, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { EnvBanner } from "@/components/EnvBanner";
+import { TopBar } from "@/components/TopBar";
 import { Badge, Skeleton } from "@/components/ui/primitives";
 import { useStaff, useStaffQuery } from "@/lib/auth";
 
@@ -44,8 +44,7 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-    <EnvBanner />
-    <div className="flex min-h-[calc(100vh-2rem)] flex-col bg-surface lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
       <aside className="shrink-0 bg-navy text-white lg:w-60">
         <div className="flex items-center justify-between px-5 py-4 lg:block">
           <Link href="/" className="block">
@@ -54,9 +53,6 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
             </p>
             <p className="hidden text-xs text-white/60 lg:block">Team workspace</p>
           </Link>
-          <button onClick={logout} className="rounded p-2 text-white/70 hover:bg-white/10 lg:hidden" aria-label="Sign out">
-            <LogOut className="size-4" />
-          </button>
         </div>
         <nav aria-label="Console" className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">
           {NAV.map(({ href, label, icon: Icon }) => {
@@ -82,15 +78,11 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <div className="mt-6 hidden border-t border-white/10 px-5 py-4 lg:block">
-          <p className="truncate text-sm font-medium">{user?.name}</p>
-          <p className="text-xs text-white/60">{user?.role.replace("_", " ").toLowerCase()}</p>
-          <button onClick={logout} className="mt-3 flex items-center gap-2 text-xs text-white/70 hover:text-white">
-            <LogOut className="size-3.5" aria-hidden /> Sign out
-          </button>
-        </div>
       </aside>
-      <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar title={user?.name ?? ""} subtitle={user?.role.replace("_", " ").toLowerCase()} onSignOut={logout} />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+      </div>
     </div>
     </>
   );

@@ -5,8 +5,6 @@ const frameAncestors = process.env.FRAME_ANCESTORS ?? "'self' http://localhost:3
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  cacheComponents: true,
-  partialPrefetching: true,
   turbopack: {
     rules: {
       "*.css": {

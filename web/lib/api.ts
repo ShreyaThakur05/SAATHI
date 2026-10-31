@@ -116,7 +116,8 @@ export const merchantApi = (token: string) => ({
       token,
       body: { text, input_mode: inputMode, conversation_id: conversationId },
     }),
-  messages: (after: number) => request<ChatMessage[]>(`/v1/conversations/latest/messages${qs({ after })}`, { token }),
+  messages: (after: number, lang?: Lang) =>
+    request<ChatMessage[]>(`/v1/conversations/latest/messages${qs({ after, lang })}`, { token }),
   uploadDocument: (caseId: number, docType: string) =>
     request<CaseSummary>(`/v1/cases/${caseId}/documents`, { method: "POST", token, body: { doc_type: docType } }),
 });

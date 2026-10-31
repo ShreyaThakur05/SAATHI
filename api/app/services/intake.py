@@ -10,7 +10,7 @@ from app.core.config import Settings
 from app.core.errors import AppError
 from app.db.models import Case, Conversation, Merchant, Message
 from app.domain.types import Intent, Product, StepKind, StepStatus
-from app.services.messaging import post_saathi
+from app.services.messaging import ack_render, post_saathi, replies_render
 from app.services.recorder import CaseRecorder
 from app.services.replies import Reply, ack_text, render
 from app.skillpacks.loader import SkillPackRegistry
@@ -76,9 +76,19 @@ def intake_message(
     lang = result.language
 
     if sensitive or result.sensitive_shared:
-        post_saathi(session, convo.id, render(Reply("sensitive_warning"), lang))
+        post_saathi(
+            session,
+            convo.id,
+            render(Reply("sensitive_warning"), lang),
+            spec=replies_render([Reply("sensitive_warning")]),
+        )
     if not parsed:
-        post_saathi(session, convo.id, render(Reply("unclear"), lang))
+        post_saathi(
+            session,
+            convo.id,
+            render(Reply("unclear"), lang),
+            spec=replies_render([Reply("unclear")]),
+        )
         return IntakeResult(convo.id, message.id, [])
 
     per_case_cost = result.ai_cost_inr / len(parsed)
@@ -121,5 +131,6 @@ def intake_message(
         )
         case_ids.append(case.id)
 
-    post_saathi(session, convo.id, ack_text([p.intent.value for p in parsed], lang))
+    intents = [p.intent.value for p in parsed]
+    post_saathi(session, convo.id, ack_text(intents, lang), spec=ack_render(intents))
     return IntakeResult(convo.id, message.id, case_ids)

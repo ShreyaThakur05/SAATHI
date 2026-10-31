@@ -14,7 +14,7 @@ from app.domain.types import CaseStatus, Intent, StepKind, StepStatus
 from app.rules.engine import CaseFacts, Outcome
 from app.services.actions import run_action, success_reply
 from app.services.context import Ctx, is_roadmap_intent
-from app.services.messaging import card_for, compose, post_saathi
+from app.services.messaging import card_for, compose, post_saathi, replies_render
 from app.services.playbooks import PLAYBOOKS, prepare_release
 from app.services.recorder import CaseRecorder
 from app.services.replies import Reply, render
@@ -114,7 +114,8 @@ def run_cases(rt: Runtime, case_ids: list[int]) -> None:
             return
         text = compose(results, language)  # type: ignore[arg-type]
         card = card_for(results, _uploads(session, [r[0] for r in results]))
-        post_saathi(session, conversation_id, text, card, case_id=results[0][0])
+        spec = replies_render([r for _, _, r in results])
+        post_saathi(session, conversation_id, text, card, case_id=results[0][0], spec=spec)
         for case_id, _, _ in results:
             replied = session.get(Case, case_id)
             assert replied is not None
@@ -133,7 +134,9 @@ def _uploads(session: Session, case_ids: list[int]) -> list[dict[str, Any]]:
 def _post_followup(session: Session, case: Case, reply: Reply) -> None:
     text = render(reply, case.language)  # type: ignore[arg-type]
     card = card_for([(case.id, CaseStatus(case.status), reply)], _uploads(session, [case.id]))
-    post_saathi(session, case.conversation_id, text, card, case_id=case.id)
+    post_saathi(
+        session, case.conversation_id, text, card, case_id=case.id, spec=replies_render([reply])
+    )
     CaseRecorder(session, case).step(
         StepKind.REPLY, StepStatus.OK, "Replied to merchant", text=text
     )

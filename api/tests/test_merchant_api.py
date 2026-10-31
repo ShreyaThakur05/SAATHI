@@ -155,3 +155,25 @@ def test_contextual_help_messages_are_understood_and_resolve_the_alert(client: T
         left = {a["kind"] for a in get(client, auth, "overview")["alerts"]}
         # settlement still needs the document + a person; everything else is fully fixed
         assert left == ({"settlement_held"} if email.startswith("anil") else set()), (email, left)
+
+
+def test_chat_history_can_be_rendered_in_any_language(client: TestClient) -> None:
+    """Clicking EN must convert the whole conversation, not just future messages."""
+    auth = login(client, "ramesh@store.example")  # a Hindi-language merchant
+    say(client, auth, "मेरा साउंडबॉक्स SB-77120 49 घंटे से बंद है")
+
+    def replies(lang: str | None) -> list[str]:
+        url = "/v1/conversations/latest/messages" + (f"?lang={lang}" if lang else "")
+        return [m["text"] for m in client.get(url, headers=auth).json() if m["role"] == "SAATHI"]
+
+    stored, hi, hinglish, en = replies(None), replies("hi"), replies("hinglish"), replies("en")
+    assert stored == hi  # message was Hindi, so the stored rendering is Hindi
+    assert "रिमोट फिक्स" in " ".join(hi) and "remote fix" not in " ".join(hi).lower()
+    assert "Remote fix kaam nahi aaya" in " ".join(hinglish)
+    assert "The remote fix did not work" in " ".join(en)
+    assert len(en) == len(hi) == 2  # same messages, different language
+    # references and the merchant's own words are never altered
+    msgs = client.get("/v1/conversations/latest/messages?lang=en", headers=auth).json()
+    assert msgs[0]["role"] == "MERCHANT" and "साउंडबॉक्स" in msgs[0]["text"]
+    assert any(i["ref"].startswith("RPL-") for m in msgs if m["card"] for i in m["card"]["items"])
+    assert client.get("/v1/conversations/latest/messages?lang=fr", headers=auth).status_code == 422

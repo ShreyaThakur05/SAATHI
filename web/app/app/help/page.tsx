@@ -63,7 +63,6 @@ function RequestCard({ r }: { r: HelpRequest }) {
             <Button onClick={() => upload.mutate()} loading={upload.isPending}>
               <FileUp className="size-4" aria-hidden /> Upload {DOC[r.waiting_for] ?? r.waiting_for}
             </Button>
-            <p className="mt-1 text-[11px] text-muted">Sandbox: uses a sample document and a simulated check.</p>
             {upload.isError && <p role="alert" className="mt-1 text-xs text-danger">{upload.error instanceof ApiError ? upload.error.message : "Upload failed"}</p>}
           </div>
         </div>

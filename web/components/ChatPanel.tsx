@@ -41,6 +41,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
   const [offline, setOffline] = useState(false);
   const convoId = useRef<number | null>(null);
   const lastId = useRef(0);
+  const loadedLang = useRef<Lang | null>(null);
   const awaitingAfter = useRef<number | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const hostEvent = useRef(onHostEvent);
@@ -65,13 +66,18 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
     let timer: ReturnType<typeof setTimeout>;
     const tick = async () => {
       try {
-        const fresh = await api.messages(lastId.current);
+        // After a language switch, reload the whole conversation: the server re-renders Saathi's
+        // replies in the chosen language, so nothing stays behind in the old one.
+        const since = loadedLang.current === lang ? lastId.current : 0;
+        const fresh = await api.messages(since, lang);
+        loadedLang.current = lang;
         setOffline(false);
         setLoaded(true);
+        if (since === 0) setMessages(fresh);
         if (fresh.length) {
           lastId.current = fresh[fresh.length - 1].id;
           convoId.current = fresh[0].conversation_id;
-          setMessages((prev) => [...prev, ...fresh.filter((m) => !prev.some((p) => p.id === m.id))]);
+          if (since !== 0) setMessages((prev) => [...prev, ...fresh.filter((m) => !prev.some((p) => p.id === m.id))]);
           const done = fresh.find((m) => m.role === "SAATHI" && m.card && (awaitingAfter.current === null || m.id > awaitingAfter.current));
           if (done?.card) {
             setWorking(false);
@@ -89,7 +95,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
       stop = true;
       clearTimeout(timer);
     };
-  }, [api, working, handleAuthError]);
+  }, [api, working, lang, handleAuthError]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });

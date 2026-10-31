@@ -52,6 +52,9 @@ class Message(Base):
     text: Mapped[str] = mapped_column(Text)  # PII-masked before storage
     input_mode: Mapped[str] = mapped_column(String(8), default="text")  # text | voice
     card: Mapped[dict[str, Any] | None] = mapped_column(JSON)  # structured status card
+    # How to re-render this message in any language: {"kind": "ack"|"replies", ...}. The stored
+    # `text` is the rendering at post time; clients ask for another language via ?lang=.
+    render: Mapped[dict[str, Any] | None] = mapped_column(JSON)
     case_id: Mapped[int | None] = mapped_column(ForeignKey("cases.id"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 

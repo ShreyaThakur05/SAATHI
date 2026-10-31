@@ -1,7 +1,7 @@
 import json
 import time
 from collections.abc import Callable, Iterator
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, BackgroundTasks, Query, Request
 from fastapi.responses import StreamingResponse
@@ -38,11 +38,13 @@ from app.db.models import (
 )
 from app.domain.types import TERMINAL_STATUSES, CaseStatus
 from app.services.intake import intake_message
+from app.services.messaging import render_in
 from app.services.metrics import compute_metrics
 from app.services.orchestrator import decide_approval, receive_document, run_cases
 from app.skillpacks.loader import pack_sources
 
 router = APIRouter(prefix="/v1")
+LangQuery = Annotated[Literal["hi", "hinglish", "en"] | None, Query()]
 
 
 # ------------------------------------------------------------------------------ auth
@@ -112,14 +114,14 @@ def post_message(
 
 @router.get("/conversations/latest/messages", response_model=list[sc.MessageOut], tags=["merchant"])
 def latest_conversation(
-    session: SessionDep, merchant: MerchantDep, after: int = 0
-) -> list[Message]:
+    session: SessionDep, merchant: MerchantDep, after: int = 0, lang: LangQuery = None
+) -> list[sc.MessageOut]:
     convo = session.scalars(
         select(Conversation)
         .where(Conversation.merchant_id == merchant.merchant_id)
         .order_by(Conversation.id.desc())
     ).first()
-    return [] if convo is None else _messages(session, convo.id, after)
+    return [] if convo is None else _messages(session, convo.id, after, lang)
 
 
 @router.get(
@@ -128,16 +130,23 @@ def latest_conversation(
     tags=["merchant"],
 )
 def conversation_messages(
-    conversation_id: int, session: SessionDep, merchant: MerchantDep, after: int = 0
-) -> list[Message]:
+    conversation_id: int,
+    session: SessionDep,
+    merchant: MerchantDep,
+    after: int = 0,
+    lang: LangQuery = None,
+) -> list[sc.MessageOut]:
     convo = session.get(Conversation, conversation_id)
     if convo is None or convo.merchant_id != merchant.merchant_id:
         raise AppError("unknown_conversation", "Conversation not found", 404)
-    return _messages(session, conversation_id, after)
+    return _messages(session, conversation_id, after, lang)
 
 
-def _messages(session: Session, conversation_id: int, after: int) -> list[Message]:
-    return list(
+def _messages(
+    session: Session, conversation_id: int, after: int, lang: str | None
+) -> list[sc.MessageOut]:
+    """Chat history; with `lang`, Saathi's replies are re-rendered in that language."""
+    rows = list(
         session.scalars(
             select(Message)
             .where(Message.conversation_id == conversation_id, Message.id > after)
@@ -145,6 +154,13 @@ def _messages(session: Session, conversation_id: int, after: int) -> list[Messag
             .limit(200)
         )
     )
+    out = []
+    for m in rows:
+        item = sc.MessageOut.model_validate(m)
+        if lang and m.role == "SAATHI":
+            item.text = render_in(m.render, lang, m.text)  # type: ignore[arg-type]
+        out.append(item)
+    return out
 
 
 @router.post("/cases/{case_id}/documents", response_model=sc.CaseSummary, tags=["merchant"])
@@ -377,6 +393,11 @@ def system_status(settings: SettingsDep, _: StaffDep) -> dict[str, object]:
             {"name": "Rental billing and reversals", "kind": "simulated", "detail": sim},
             {"name": "Logistics and replacement orders", "kind": "simulated", "detail": sim},
             {"name": "Settlement ledger and KYC", "kind": "simulated", "detail": sim},
+            {
+                "name": "Document verification",
+                "kind": "simulated",
+                "detail": "Simulated: an uploaded document is accepted as a sample and marked verified",
+            },
             {"name": "Biller network", "kind": "simulated", "detail": sim},
             {
                 "name": "Payment gateway (Refund and Refund Status APIs)",

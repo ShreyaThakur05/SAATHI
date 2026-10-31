@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { CheckCircle2, Clock3, FileUp, ShieldAlert, UserRound } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "@/lib/api";
-import { t, uploadLabel } from "@/lib/i18n";
+import { itemText, t, uploadLabel } from "@/lib/i18n";
 import type { ChatCard, Lang } from "@/lib/types";
 
 const STATE = {
@@ -48,10 +48,10 @@ export function StatusCard({
       <ul className={clsx("space-y-1", empty && "hidden")}>
         {card.items.map((i) => (
           <li key={i.ref} className="flex items-center justify-between gap-3">
-            <span className="text-ink">{i.label}</span>
+            <span className="text-ink">{itemText(i.label, lang)}</span>
             <span className="flex items-center gap-2">
               <code className="rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-ink ring-1 ring-line">{i.ref}</code>
-              {i.note && <span className={clsx("text-xs font-semibold", s.cls)}>{i.note}</span>}
+              {i.note && <span className={clsx("text-xs font-semibold", s.cls)}>{itemText(i.note, lang)}</span>}
             </span>
           </li>
         ))}
@@ -69,7 +69,6 @@ export function StatusCard({
               <FileUp className="size-4" aria-hidden />
               {state === "done" ? t("uploaded", lang) : uploadLabel(u.doc_type, lang)}
             </button>
-            <p className="mt-1 text-center text-[11px] text-muted">Sandbox: sends a sample document and runs a simulated check.</p>
             {state && state !== "busy" && state !== "done" && (
               <p role="alert" className="mt-1 text-xs text-danger">{state}</p>
             )}

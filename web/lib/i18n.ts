@@ -69,3 +69,15 @@ export const SAMPLE_PROMPTS: Record<Lang, string[]> = {
     "My settlement is on hold",
   ],
 };
+
+const ITEM_TEXT: Record<string, Record<Lang, string>> = {
+  Replacement: { hi: "रिप्लेसमेंट", hinglish: "Replacement", en: "Replacement" },
+  Refund: { hi: "रिफंड", hinglish: "Refund", en: "Refund" },
+  "Hold release": { hi: "होल्ड हटाना", hinglish: "Hold release", en: "Hold release" },
+  Created: { hi: "बन गया", hinglish: "Ban gaya", en: "Created" },
+  Success: { hi: "सफल", hinglish: "Safal", en: "Success" },
+  Done: { hi: "हो गया", hinglish: "Ho gaya", en: "Done" },
+};
+
+/** Card labels come from the server in English; show them in the chat's language. */
+export const itemText = (text: string, lang: Lang) => ITEM_TEXT[text]?.[lang] ?? text;
