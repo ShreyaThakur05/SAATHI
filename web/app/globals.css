@@ -1,22 +1,71 @@
 @import "tailwindcss";
 
 /* Design tokens. Hosts can re-theme the embedded chat by overriding --brand (see lib/embed.ts). */
-:root {
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Design tokens. `data-theme="light"` on any element makes it (and its children) a light island,
+   used for device mock-ups that must stay light inside a dark page. */
+:root,
+[data-theme="light"] {
+  --page: #ffffff;
+  --card: #ffffff;
+  --surface: #f5f8fc;
+  --ink: #0f172a;
+  --muted: #5b6b82;
+  --line: #e3e9f2;
+  --heading: #0a1f3c;
+  --link: #002e6e;
+  --eyebrow: #5b3fc4;
+  --chat: #eef3f9;
+  --bubble: #d8f1fc;
   --brand: #00b9f5;
   --brand-ink: #003b55;
   --navy: #0a1f3c;
   --navy-2: #002e6e;
-  --ink: #0f172a;
-  --muted: #5b6b82;
-  --line: #e3e9f2;
-  --surface: #f5f8fc;
   --success: #0b7a50;
   --warn: #8f5b00;
   --danger: #b42d2d;
   --lav: #a78bfa;
+  color-scheme: light;
 }
 
+[data-theme="dark"] {
+  --page: #0a1326;
+  --card: #111c34;
+  --surface: #0e1830;
+  --ink: #e7edf9;
+  --muted: #a3b3cf;
+  --line: #243350;
+  --heading: #eef3ff;
+  --link: #8fb0ff;
+  --eyebrow: #b7a4ff;
+  --chat: #0c1629;
+  --bubble: #1d3c63;
+  --navy-2: #3d63e0;
+  --lav: #a78bfa;
+  color-scheme: dark;
+}
+
+/* semantic text colours that need a lighter shade on dark backgrounds */
+[data-theme="dark"] .text-success { color: #4be0a0; }
+[data-theme="dark"] .text-warn { color: #f6bf5c; }
+[data-theme="dark"] .text-danger { color: #ff8f8f; }
+[data-theme="dark"] .text-brand-ink { color: #8fe0ff; }
+[data-theme="dark"] [data-theme="light"] .text-success { color: var(--success); }
+[data-theme="dark"] [data-theme="light"] .text-warn { color: var(--warn); }
+[data-theme="dark"] [data-theme="light"] .text-danger { color: var(--danger); }
+[data-theme="dark"] [data-theme="light"] .text-brand-ink { color: var(--brand-ink); }
+/* map tiles: soften them on dark */
+[data-theme="dark"] .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9); }
+
 @theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-heading: var(--heading);
+  --color-link: var(--link);
+  --color-eyebrow: var(--eyebrow);
+  --color-chat: var(--chat);
+  --color-bubble: var(--bubble);
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-navy: var(--navy);
@@ -38,7 +87,7 @@ html {
 }
 
 body {
-  background: #fff;
+  background: var(--page);
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -76,4 +125,21 @@ body {
 @keyframes saathi-wave {
   0%, 100% { transform: scaleY(0.35); }
   50% { transform: scaleY(1); }
+}
+
+/* Touch screens: comfortable tap targets */
+@media (pointer: coarse) {
+  button,
+  [role="tab"],
+  summary,
+  select,
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]) {
+    min-height: 44px;
+  }
+  footer li > a,
+  footer li > button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }

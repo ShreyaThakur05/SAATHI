@@ -15,7 +15,7 @@ const LocationMap = dynamic(() => import("./LocationMap").then((m) => m.Location
 });
 
 const KIND_ICON: Record<HistoryEvent["kind"], { icon: typeof Zap; cls: string }> = {
-  case: { icon: LifeBuoy, cls: "bg-navy-2/10 text-navy-2" },
+  case: { icon: LifeBuoy, cls: "bg-navy-2/10 text-link" },
   device: { icon: Router, cls: "bg-brand/20 text-brand-ink" },
   money: { icon: Banknote, cls: "bg-success/10 text-success" },
   kyc: { icon: FileCheck2, cls: "bg-warn/10 text-warn" },
@@ -65,7 +65,7 @@ export function ProfileView({
       <Card className="flex flex-wrap items-center gap-5 p-5">
         <span aria-hidden className="flex size-16 items-center justify-center rounded-2xl bg-navy-2 text-2xl font-bold text-white">{m.name.charAt(0)}</span>
         <div className="min-w-0 flex-1">
-          <h2 className="text-xl font-bold text-navy">{m.name}</h2>
+          <h2 className="text-xl font-bold text-heading">{m.name}</h2>
           <p className="text-sm text-muted">{m.category} · {m.city}</p>
           <p className="mt-1 flex items-center gap-1.5 text-sm text-muted"><MapPin className="size-4" aria-hidden />{m.address || "No address on file"}</p>
         </div>
@@ -93,7 +93,7 @@ export function ProfileView({
 
       {profile.devices.length > 0 && (
         <section aria-label="Live device connections" className="space-y-4">
-          <h2 className="text-lg font-semibold text-navy">Live device connections</h2>
+          <h2 className="text-lg font-semibold text-heading">Live device connections</h2>
           {profile.devices.map((d) => (
             <div key={d.id} className="space-y-2">
               <p className="text-sm font-semibold text-ink">{d.kind === "SOUNDBOX" ? "Soundbox" : "Card machine"} <span className="font-mono text-xs text-muted">{d.serial}</span></p>

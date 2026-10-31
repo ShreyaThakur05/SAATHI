@@ -25,7 +25,7 @@ export default function Transactions() {
       <PageHeader title="Transactions" subtitle="Money in and out of your account." />
       <div role="tablist" aria-label="Filter transactions" className="mb-4 flex flex-wrap gap-2">
         {FILTERS.map((f) => (
-          <button key={f.id} role="tab" aria-selected={filter === f.id} onClick={() => setFilter(f.id)} className={clsx("rounded-full px-3 py-1.5 text-sm font-medium", filter === f.id ? "bg-navy-2 text-white" : "bg-white text-muted ring-1 ring-line hover:text-ink")}>
+          <button key={f.id} role="tab" aria-selected={filter === f.id} onClick={() => setFilter(f.id)} className={clsx("rounded-full px-3 py-1.5 text-sm font-medium", filter === f.id ? "bg-navy-2 text-white" : "bg-card text-muted ring-1 ring-line hover:text-ink")}>
             {f.label}
           </button>
         ))}

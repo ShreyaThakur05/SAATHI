@@ -43,12 +43,12 @@ export function SaathiProvider({ children, busyCount }: { children: React.ReactN
         <button
           onClick={() => setIsOpen(true)}
           aria-label="Ask Saathi for help"
-          className="fixed bottom-5 right-5 z-30 flex items-center gap-2 rounded-full bg-navy-2 py-3 pl-4 pr-5 text-sm font-semibold text-white shadow-xl hover:bg-navy"
+          className="fixed bottom-20 right-4 z-30 flex size-14 items-center justify-center gap-2 rounded-full bg-navy-2 text-sm font-semibold text-white shadow-xl hover:bg-navy sm:h-auto sm:w-auto sm:py-3 sm:pl-4 sm:pr-5 lg:bottom-5 lg:right-5"
         >
-          <Sparkles className="size-4 text-brand" aria-hidden />
-          Ask Saathi
+          <Sparkles className="size-5 text-brand sm:size-4" aria-hidden />
+          <span className="hidden sm:inline">Ask Saathi</span>
           {busyCount > 0 && (
-            <span className="ml-1 rounded-full bg-brand px-1.5 text-[11px] font-bold text-brand-ink" aria-label={`${busyCount} requests in progress`}>
+            <span className="absolute -right-1 -top-1 rounded-full bg-brand px-1.5 text-[11px] font-bold text-brand-ink sm:static sm:ml-1" aria-label={`${busyCount} requests in progress`}>
               {busyCount}
             </span>
           )}
@@ -60,7 +60,7 @@ export function SaathiProvider({ children, busyCount }: { children: React.ReactN
         aria-hidden
       />
       {isOpen && token && (
-        <aside role="dialog" aria-label="Saathi help chat" className="fixed inset-y-0 right-0 z-40 flex w-full flex-col overflow-hidden bg-white shadow-2xl sm:w-[26rem] sm:border-l sm:border-line">
+        <aside role="dialog" aria-label="Saathi help chat" className="fixed inset-y-0 right-0 z-40 flex w-full flex-col overflow-hidden bg-card shadow-2xl sm:w-[26rem] sm:border-l sm:border-line">
           <ChatPanel token={token} lang={lang} onLangChange={setLang} autoSend={pending} onClose={() => setIsOpen(false)} className="h-full" />
         </aside>
       )}

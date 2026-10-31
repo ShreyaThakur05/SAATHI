@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button, Field, inputClass } from "@/components/ui/primitives";
 import { ApiError, merchantLogin } from "@/lib/api";
 import { saveMerchantSession, useMerchant } from "@/lib/merchantAuth";
@@ -43,13 +44,14 @@ export default function MerchantLogin() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface p-4">
+      <ThemeToggle className="absolute right-4 top-4" />
       <div className="w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
           <Logo size={72} />
-          <p className="mt-3 text-2xl font-bold text-navy">Business dashboard</p>
+          <p className="mt-3 text-2xl font-bold text-heading">Business dashboard</p>
           <p className="mt-1 text-sm text-muted">Sign in to manage your devices, settlements and payments.</p>
         </div>
-        <form onSubmit={submit} className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm">
+        <form onSubmit={submit} className="space-y-4 rounded-2xl border border-line bg-card p-6 shadow-sm">
           <Field label="Email">
             <input className={inputClass} type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </Field>
@@ -58,7 +60,7 @@ export default function MerchantLogin() {
           </Field>
           <Button type="submit" loading={busy} className="w-full">Sign in</Button>
         </form>
-        <details className="mt-4 rounded-xl border border-line bg-white p-4 text-sm">
+        <details className="mt-4 rounded-xl border border-line bg-card p-4 text-sm">
           <summary className="cursor-pointer font-medium text-ink">Sandbox accounts</summary>
           <p className="mt-2 text-xs text-muted">Fictional merchants, each with a different situation. Password for all: <code className="rounded bg-surface px-1">saathi-demo</code></p>
           <ul className="mt-2 space-y-1.5">
@@ -73,7 +75,7 @@ export default function MerchantLogin() {
           </ul>
         </details>
         <p className="mt-6 text-center text-xs text-muted">
-          Support team? <Link href="/console" className="font-semibold text-navy-2 hover:underline">Open the team console</Link>
+          Support team? <Link href="/console" className="font-semibold text-link hover:underline">Open the team console</Link>
         </p>
       </div>
     </main>

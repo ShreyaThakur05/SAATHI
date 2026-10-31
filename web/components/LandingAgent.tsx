@@ -68,7 +68,7 @@ function Ctas({ ctas }: { ctas: Cta[] }) {
         </Link>
       )}
       {ctas.includes("console") && (
-        <Link href="/console" className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-navy-2 ring-1 ring-line hover:bg-surface">
+        <Link href="/console" className="inline-flex items-center gap-1.5 rounded-full bg-card px-4 py-2 text-sm font-semibold text-link ring-1 ring-line hover:bg-surface">
           <Headset className="size-4" aria-hidden /> Team console sign in
         </Link>
       )}
@@ -88,13 +88,13 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
 
   const fresh = messages.length === 1;
   return (
-    <div className={clsx("flex min-h-0 flex-col bg-[#eef3f9]", className)}>
+    <div className={clsx("flex min-h-0 flex-col bg-chat", className)}>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4" role="log" aria-live="polite" aria-label="Conversation with Saathi">
         <ul className="space-y-2.5">
           {messages.map((m) => (
             <li key={m.id} className={clsx("flex gap-2", m.role === "you" ? "justify-end" : "justify-start")}>
-              {m.role === "agent" && <Logo size={28} className="mt-1 shrink-0 self-start rounded-full bg-white p-0.5" />}
-              <div className={clsx("max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm", m.role === "you" ? "rounded-br-sm bg-[#d8f1fc] text-ink" : "rounded-bl-sm bg-white text-ink")}>
+              {m.role === "agent" && <Logo size={28} className="mt-1 shrink-0 self-start rounded-full bg-card p-0.5" />}
+              <div className={clsx("max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed shadow-sm", m.role === "you" ? "rounded-br-sm bg-bubble text-ink" : "rounded-bl-sm bg-card text-ink")}>
                 {m.text}
                 {m.ctas && <Ctas ctas={m.ctas} />}
               </div>
@@ -102,8 +102,8 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
           ))}
           {typing && (
             <li className="flex gap-2" aria-label="Saathi is typing">
-              <Logo size={28} className="mt-1 shrink-0 self-start rounded-full bg-white p-0.5" />
-              <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-white px-4 py-3 shadow-sm" aria-hidden>
+              <Logo size={28} className="mt-1 shrink-0 self-start rounded-full bg-card p-0.5" />
+              <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-card px-4 py-3 shadow-sm" aria-hidden>
                 {[0, 1, 2].map((i) => <span key={i} className="size-1.5 rounded-full bg-muted" style={{ animation: `saathi-dot 1s ${i * 0.15}s infinite` }} />)}
               </div>
             </li>
@@ -112,7 +112,7 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
         {fresh && (
           <div className="mt-4 flex flex-wrap gap-2">
             {STARTERS.map((s) => (
-              <button key={s} type="button" onClick={() => send(s)} className="rounded-full bg-white px-3.5 py-1.5 text-sm text-ink shadow-sm ring-1 ring-line hover:ring-navy-2">
+              <button key={s} type="button" onClick={() => send(s)} className="rounded-full bg-card px-3.5 py-1.5 text-sm text-ink shadow-sm ring-1 ring-line hover:ring-navy-2">
                 {s}
               </button>
             ))}
@@ -126,7 +126,7 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
           send(text);
           setText("");
         }}
-        className="flex items-center gap-2 border-t border-line bg-white px-3 py-2.5"
+        className="flex items-center gap-2 border-t border-line bg-card px-3 py-2.5"
       >
         <button
           type="button"
@@ -158,9 +158,9 @@ function AgentChat({ className, idPrefix }: { className?: string; idPrefix: stri
 /** The in-page "talk to Saathi" card. */
 export function AgentInline() {
   return (
-    <div className="overflow-hidden rounded-3xl border border-line bg-white shadow-xl shadow-navy/5">
+    <div className="overflow-hidden rounded-3xl border border-line bg-card shadow-xl shadow-navy/5">
       <div className="flex items-center gap-3 bg-navy px-5 py-3.5 text-white">
-        <Logo size={40} className="rounded-full bg-white p-0.5" />
+        <Logo size={40} className="rounded-full bg-card p-0.5" />
         <div>
           <p className="font-semibold leading-tight">Saathi</p>
           <p className="flex items-center gap-1.5 text-xs text-white/70"><span className="size-1.5 rounded-full bg-success" aria-hidden />Online · Hindi, Hinglish, English</p>
@@ -184,18 +184,18 @@ export function AgentLauncher() {
   return (
     <>
       {!panelOpen && (
-        <button onClick={() => setPanelOpen(true)} aria-label="Chat with Saathi" className="fixed bottom-5 right-5 z-40 flex items-center gap-2.5 rounded-full bg-navy-2 py-2.5 pl-2.5 pr-5 text-sm font-semibold text-white shadow-xl shadow-navy-2/30 hover:bg-navy">
-          <Logo size={34} className="rounded-full bg-white p-0.5" />
-          Chat with Saathi
-          {unread && <span className="size-2.5 rounded-full bg-brand" aria-label="New reply" />}
+        <button onClick={() => setPanelOpen(true)} aria-label="Chat with Saathi" className="fixed bottom-4 right-4 z-40 flex items-center gap-2.5 rounded-full bg-navy-2 p-1.5 text-sm font-semibold text-white shadow-xl shadow-navy-2/30 hover:bg-navy sm:bottom-5 sm:right-5 sm:py-2.5 sm:pl-2.5 sm:pr-5">
+          <Logo size={34} className="rounded-full bg-card p-0.5" />
+          <span className="hidden sm:inline">Chat with Saathi</span>
+          {unread && <span className="absolute right-0 top-0 size-3 rounded-full bg-brand ring-2 ring-card sm:static sm:size-2.5 sm:ring-0" aria-label="New reply" />}
         </button>
       )}
       {panelOpen && (
         <>
           <div className="fixed inset-0 z-40 bg-navy/40 sm:hidden" onClick={() => setPanelOpen(false)} aria-hidden />
-          <aside role="dialog" aria-label="Chat with Saathi" className="fixed inset-y-0 right-0 z-50 flex w-full flex-col overflow-hidden bg-white shadow-2xl sm:inset-y-auto sm:bottom-5 sm:right-5 sm:h-[34rem] sm:w-[24rem] sm:rounded-3xl sm:border sm:border-line">
+          <aside role="dialog" aria-label="Chat with Saathi" className="fixed inset-y-0 right-0 z-50 flex w-full flex-col overflow-hidden bg-card shadow-2xl sm:inset-y-auto sm:bottom-5 sm:right-5 sm:h-[34rem] sm:w-[24rem] sm:rounded-3xl sm:border sm:border-line">
             <div className="flex items-center gap-3 bg-navy px-4 py-3 text-white">
-              <Logo size={36} className="rounded-full bg-white p-0.5" />
+              <Logo size={36} className="rounded-full bg-card p-0.5" />
               <div className="min-w-0 flex-1">
                 <p className="font-semibold leading-tight">Saathi</p>
                 <p className="flex items-center gap-1.5 text-xs text-white/70"><Sparkles className="size-3" aria-hidden />Sign in to get help with your account</p>

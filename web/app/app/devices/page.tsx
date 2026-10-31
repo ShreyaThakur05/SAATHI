@@ -50,7 +50,7 @@ function DeviceCard({ d, defaultOpen, ask }: { d: MerchantDevice; defaultOpen: b
     <Card className="p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-xl bg-navy-2/10 text-navy-2"><Icon className="size-5" aria-hidden /></span>
+          <span className="flex size-11 items-center justify-center rounded-xl bg-navy-2/10 text-link"><Icon className="size-5" aria-hidden /></span>
           <div>
             <h2 className="font-semibold text-ink">{name}</h2>
             <p className="font-mono text-xs text-muted">{d.serial}</p>
@@ -66,7 +66,7 @@ function DeviceCard({ d, defaultOpen, ask }: { d: MerchantDevice; defaultOpen: b
         {d.monthly_rent_inr && <div><dt className="text-xs text-muted">Monthly rent</dt><dd className="font-medium">{formatInr(d.monthly_rent_inr)}</dd></div>}
       </dl>
       <div className="mt-4">
-        <button type="button" onClick={() => setLive((v) => !v)} aria-expanded={live} className="flex items-center gap-2 text-sm font-semibold text-navy-2 hover:underline">
+        <button type="button" onClick={() => setLive((v) => !v)} aria-expanded={live} className="flex items-center gap-2 text-sm font-semibold text-link hover:underline">
           <Radio className="size-4" aria-hidden /> {live ? "Hide live connection" : "Show live connection"}
         </button>
         {live && api && (

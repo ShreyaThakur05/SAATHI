@@ -18,7 +18,7 @@ const subscribeMotion = (cb: () => void) => {
 /** The merchant's phone: the chat as they see it. */
 function Phone({ f }: { f: ReturnType<typeof frameAt> }) {
   return (
-    <div className="mx-auto flex h-full w-full max-w-[15rem] flex-col rounded-[2.2rem] border-[6px] border-[#070f24] bg-[#070f24] shadow-2xl shadow-black/40">
+    <div data-theme="light" className="mx-auto flex h-full w-full max-w-[15rem] flex-col rounded-[2.2rem] border-[6px] border-[#070f24] bg-[#070f24] shadow-2xl shadow-black/40">
       <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.75rem] bg-white">
         <div aria-hidden className="absolute left-1/2 top-1.5 z-10 h-4 w-20 -translate-x-1/2 rounded-full bg-[#070f24]" />
         <div className="flex items-center justify-between bg-navy px-4 pb-1 pt-2 text-[10px] font-medium text-white/80">
@@ -32,9 +32,9 @@ function Phone({ f }: { f: ReturnType<typeof frameAt> }) {
             <p className="flex items-center gap-1 text-[10px] text-white/80"><span className="size-1.5 rounded-full bg-[#3ddc97]" />online</p>
           </div>
         </div>
-        <div className="flex min-h-[15rem] flex-1 flex-col justify-end gap-2 overflow-hidden bg-[#eef3f9] p-2.5">
+        <div className="flex min-h-[15rem] flex-1 flex-col justify-end gap-2 overflow-hidden bg-chat p-2.5">
           {f.voice && (
-            <div className="animate-in ml-auto max-w-[92%] rounded-2xl rounded-br-sm bg-[#d8f1fc] px-3 py-2 shadow-sm">
+            <div className="animate-in ml-auto max-w-[92%] rounded-2xl rounded-br-sm bg-bubble px-3 py-2 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className={clsx("flex size-6 shrink-0 items-center justify-center rounded-full text-white", f.recording ? "bg-danger" : "bg-navy-2")}><Mic className="size-3" /></span>
                 <span className="flex h-5 items-center gap-[2px]">
@@ -81,7 +81,7 @@ function ConsoleWindow({ f }: { f: ReturnType<typeof frameAt> }) {
   const status = f.verified ? "Resolved" : s[0] !== "pending" ? "Working" : "Queued";
   const done = (i: number) => s[i] === "done";
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl shadow-black/40">
+    <div data-theme="light" className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-2xl shadow-black/40">
       <div className="flex items-center gap-1.5 bg-[#e8edf6] px-4 py-2">
         <span className="size-2.5 rounded-full bg-[#ff6b6b]" /><span className="size-2.5 rounded-full bg-[#ffc14d]" /><span className="size-2.5 rounded-full bg-[#4cd18a]" />
         <span className="ml-3 text-xs font-medium text-[#3f4d63]">Saathi console · Case #1</span>
@@ -89,7 +89,7 @@ function ConsoleWindow({ f }: { f: ReturnType<typeof frameAt> }) {
       <div className="flex flex-1 flex-col justify-between gap-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="font-semibold text-navy">Soundbox not working</p>
+            <p className="font-semibold text-heading">Soundbox not working</p>
             <p className="text-xs text-muted">Ramesh General Store</p>
           </div>
           <span className={clsx("inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold", status === "Resolved" ? "bg-success/10 text-success" : status === "Working" ? "bg-brand/15 text-brand-ink" : "bg-surface text-muted ring-1 ring-line")}>
@@ -181,7 +181,7 @@ export function AgentDemo({ className }: { className?: string }) {
         </div>
 
         <div className="mt-3 flex items-center gap-3 rounded-full bg-white/10 px-3 py-1.5 ring-1 ring-white/15">
-          <button type="button" onClick={() => { setTouched(true); setPlaying(!isPlaying); }} aria-label={isPlaying ? "Pause walkthrough" : "Play walkthrough"} className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white text-navy-2 hover:bg-surface">
+          <button type="button" onClick={() => { setTouched(true); setPlaying(!isPlaying); }} aria-label={isPlaying ? "Pause walkthrough" : "Play walkthrough"} className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white text-link hover:bg-surface">
             {isPlaying ? <Pause className="size-4" aria-hidden /> : <Play className="size-4" aria-hidden />}
           </button>
           <button type="button" onClick={() => { setTouched(true); setT(0); setPlaying(true); }} aria-label="Replay walkthrough" className="flex size-8 shrink-0 items-center justify-center rounded-full text-white ring-1 ring-white/40 hover:bg-white/10">

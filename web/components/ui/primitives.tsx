@@ -20,7 +20,7 @@ export function Button({
         "inline-flex h-9 items-center justify-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition-colors",
         "disabled:cursor-not-allowed disabled:opacity-50",
         variant === "primary" && "bg-navy-2 text-white hover:bg-navy",
-        variant === "secondary" && "border border-line bg-white text-ink hover:bg-surface",
+        variant === "secondary" && "border border-line bg-card text-ink hover:bg-surface",
         variant === "ghost" && "text-muted hover:bg-surface hover:text-ink",
         variant === "danger" && "bg-danger text-white hover:opacity-90",
         className,
@@ -33,7 +33,7 @@ export function Button({
 }
 
 export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <section className={clsx("rounded-xl border border-line bg-white", className)}>{children}</section>;
+  return <section className={clsx("rounded-xl border border-line bg-card", className)}>{children}</section>;
 }
 
 export function CardHeader({ title, action, hint }: { title: string; action?: ReactNode; hint?: string }) {
@@ -87,7 +87,7 @@ export function Stat({
   tone?: "default" | "success" | "warn";
 }) {
   return (
-    <div className="rounded-xl border border-line bg-white p-4">
+    <div className="rounded-xl border border-line bg-card p-4">
       <p className="text-xs font-medium text-muted">{label}</p>
       <p
         className={clsx(
@@ -156,4 +156,4 @@ export function Field({ label, children, error }: { label: string; children: Rea
 }
 
 export const inputClass =
-  "h-10 w-full rounded-lg border border-line bg-white px-3 text-sm text-ink placeholder:text-muted/70 focus:border-navy-2 focus:outline-none";
+  "h-10 w-full rounded-lg border border-line bg-card px-3 text-sm text-ink placeholder:text-muted/70 focus:border-navy-2 focus:outline-none";

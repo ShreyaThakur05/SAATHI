@@ -59,7 +59,7 @@ export default function EmbedDemoPage() {
   }, [loaded, merchant, lang, primary]);
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-ink">
+    <div data-theme="light" className="min-h-screen bg-[#f3f4f6] text-ink">
       <Script src="/saathi-widget.js" strategy="afterInteractive" onReady={() => setLoaded(true)} />
       <div className="bg-amber-100 px-4 py-2 text-center text-xs font-medium text-amber-900">
         An illustrative <strong>example host dashboard</strong> with sample data, not a Paytm screen. It shows how Saathi drops into any merchant dashboard.
@@ -69,7 +69,7 @@ export default function EmbedDemoPage() {
         <aside className="hidden w-52 shrink-0 space-y-1 md:block">
           {[["Home", LayoutDashboard], ["Payments", Wallet], ["Devices", Router], ["Help", LifeBuoy]].map(([label, Icon], i) => {
             const I = Icon as typeof Wallet;
-            return <div key={label as string} className={clsx("flex items-center gap-2 rounded-lg px-3 py-2 text-sm", i === 2 ? "bg-white font-semibold shadow-sm" : "text-muted")}><I className="size-4" aria-hidden />{label as string}</div>;
+            return <div key={label as string} className={clsx("flex items-center gap-2 rounded-lg px-3 py-2 text-sm", i === 2 ? "bg-card font-semibold shadow-sm" : "text-muted")}><I className="size-4" aria-hidden />{label as string}</div>;
           })}
         </aside>
         <main className="min-w-0 flex-1 space-y-4">
@@ -79,10 +79,10 @@ export default function EmbedDemoPage() {
           </header>
           <div className="grid gap-3 sm:grid-cols-3">
             {[["Today's collections", "₹12,480"], ["Next settlement", "₹48,250"], ["Active devices", "2"]].map(([k, v]) => (
-              <div key={k} className="rounded-xl bg-white p-4 shadow-sm"><p className="text-xs text-muted">{k}</p><p className="mt-1 text-xl font-bold tabular-nums">{v}</p><p className="text-[11px] text-muted">sample data</p></div>
+              <div key={k} className="rounded-xl bg-card p-4 shadow-sm"><p className="text-xs text-muted">{k}</p><p className="mt-1 text-xl font-bold tabular-nums">{v}</p><p className="text-[11px] text-muted">sample data</p></div>
             ))}
           </div>
-          <section className="rounded-xl bg-white shadow-sm">
+          <section className="rounded-xl bg-card shadow-sm">
             <h2 className="border-b border-line px-4 py-3 text-sm font-semibold">Your devices</h2>
             <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
               <div><p className="text-sm font-semibold">Soundbox SB-77120</p><p className="text-xs text-danger">Offline for 49 hours</p></div>
@@ -92,7 +92,7 @@ export default function EmbedDemoPage() {
 
           {event && <p role="status" className="flex items-start gap-2 rounded-xl bg-success/10 p-3 text-sm"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-success" aria-hidden />{event}</p>}
 
-          <section className="rounded-xl bg-white p-4 shadow-sm">
+          <section className="rounded-xl bg-card p-4 shadow-sm">
             <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold"><Code2 className="size-4" aria-hidden />The host controls the look and the language</h2>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div role="group" aria-label="Widget language" className="flex gap-1">

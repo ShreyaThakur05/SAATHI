@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Logo } from "@/components/Logo";
+import { MobileNav } from "@/components/MobileNav";
 import { TopBar } from "@/components/TopBar";
 import { Badge, Skeleton } from "@/components/ui/primitives";
 import { useStaff, useStaffQuery } from "@/lib/auth";
@@ -47,10 +48,10 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
   return (
     <>
     <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
-      <aside className="shrink-0 bg-navy text-white lg:w-60">
+      <aside className="hidden shrink-0 bg-navy text-white lg:block lg:w-60">
         <div className="flex items-center justify-between px-5 py-4 lg:block">
           <Link href="/" className="flex items-center gap-2.5">
-            <Logo size={36} className="rounded-full bg-white p-0.5" />
+            <Logo size={36} className="rounded-full bg-card p-0.5" />
             <span>
               <span className="block text-base font-bold leading-tight">Saathi</span>
               <span className="block text-xs text-white/60">Team console</span>
@@ -84,9 +85,14 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar title={user?.name ?? ""} subtitle={user?.role.replace("_", " ").toLowerCase()} onSignOut={logout} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="flex-1 p-4 pb-28 sm:p-6 lg:p-8 lg:pb-8">{children}</main>
       </div>
     </div>
+    <MobileNav
+      items={NAV.map((n) => ({ ...n, badge: n.href === "/console/approvals" ? pending.data?.total : undefined }))}
+      isActive={(href) => (href === "/console" ? pathname === "/console" || pathname.startsWith("/console/cases") : pathname.startsWith(href))}
+      onSignOut={logout}
+    />
     </>
   );
 }

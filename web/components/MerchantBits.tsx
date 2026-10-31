@@ -23,7 +23,7 @@ export function PageHeader({ title, subtitle, action }: { title: string; subtitl
   return (
     <header className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="text-2xl font-bold text-navy">{title}</h1>
+        <h1 className="text-2xl font-bold text-heading">{title}</h1>
         {subtitle && <p className="text-sm text-muted">{subtitle}</p>}
       </div>
       {action}
@@ -57,7 +57,7 @@ export function AlertCard({ alert }: { alert: MerchantAlert }) {
 
 const ICON: Record<LedgerItem["kind"], { icon: typeof Wallet; cls: string }> = {
   payment_received: { icon: ArrowDownLeft, cls: "bg-success/10 text-success" },
-  settlement: { icon: Banknote, cls: "bg-navy-2/10 text-navy-2" },
+  settlement: { icon: Banknote, cls: "bg-navy-2/10 text-link" },
   rent_charge: { icon: ArrowUpRight, cls: "bg-surface text-muted" },
   rent_reversal: { icon: RotateCcw, cls: "bg-success/10 text-success" },
   bill_payment: { icon: Receipt, cls: "bg-surface text-muted" },

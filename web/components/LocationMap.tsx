@@ -63,7 +63,7 @@ export function LocationMap({ location, height = "20rem" }: { location: Location
   return (
     <div className="relative overflow-hidden rounded-xl border border-line">
       <div ref={ref} style={{ height }} role="region" aria-label="Map of the shop, its devices and the nearest cell site" className="bg-surface" />
-      <span className="pointer-events-none absolute bottom-7 left-3 z-[500] rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-medium text-muted shadow">Simulated location</span>
+      <span className="pointer-events-none absolute bottom-7 left-3 z-[500] rounded-full bg-card/95 px-2.5 py-1 text-[11px] font-medium text-muted shadow">Simulated location</span>
     </div>
   );
 }

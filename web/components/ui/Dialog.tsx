@@ -27,7 +27,7 @@ export function Dialog({
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
       aria-labelledby="dialog-title"
-      className="m-auto w-[min(92vw,28rem)] rounded-xl border border-line p-0 shadow-xl backdrop:bg-navy/40"
+      className="m-auto w-[min(92vw,28rem)] rounded-xl border border-line bg-card p-0 text-ink shadow-xl backdrop:bg-navy/40"
     >
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <h2 id="dialog-title" className="text-sm font-semibold">

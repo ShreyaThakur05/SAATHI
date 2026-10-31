@@ -45,7 +45,7 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-5">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Settings</h1>
+        <h1 className="text-2xl font-bold text-heading">Settings</h1>
         <p className="text-sm text-muted">What this environment is connected to, stated plainly.</p>
       </header>
 

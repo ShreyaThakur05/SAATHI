@@ -29,7 +29,7 @@ function AuditInner() {
   return (
     <div className="mx-auto max-w-6xl space-y-5">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Audit log</h1>
+        <h1 className="text-2xl font-bold text-heading">Audit log</h1>
         <p className="text-sm text-muted">Every action, rule and approver. Append-only: the database refuses edits and deletes.</p>
       </header>
       <div className="flex flex-wrap gap-3">

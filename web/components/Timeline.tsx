@@ -116,7 +116,7 @@ export function StepList({ steps }: { steps: Step[] }) {
                   s.status === "FAILED" && "bg-danger/10 text-danger",
                   s.status === "INFO" && "bg-warn/10 text-warn",
                   s.status === "OK" && s.kind === "PROVE" && "bg-success/10 text-success",
-                  s.status === "OK" && s.kind !== "PROVE" && "bg-navy-2/10 text-navy-2",
+                  s.status === "OK" && s.kind !== "PROVE" && "bg-navy-2/10 text-link",
                 )}
               >
                 <Icon className="size-3.5" aria-hidden />

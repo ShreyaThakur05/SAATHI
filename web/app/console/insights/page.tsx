@@ -35,7 +35,7 @@ export default function InsightsPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Insights</h1>
+        <h1 className="text-2xl font-bold text-heading">Insights</h1>
         <p className="text-sm text-muted">Measured from the cases in this environment. Nothing here is projected.</p>
       </header>
 

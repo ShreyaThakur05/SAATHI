@@ -14,7 +14,7 @@ export default function Merchants() {
   return (
     <div className="mx-auto max-w-4xl space-y-5">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Merchants</h1>
+        <h1 className="text-2xl font-bold text-heading">Merchants</h1>
         <p className="text-sm text-muted">Open a merchant to see their profile, location, live device connections and history.</p>
       </header>
       <div className="relative max-w-sm">
@@ -27,7 +27,7 @@ export default function Merchants() {
             {list.data.map((m) => (
               <li key={m.id} className="border-b border-line last:border-0">
                 <Link href={`/console/merchants/${m.id}`} className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-surface">
-                  <span aria-hidden className="flex size-10 items-center justify-center rounded-full bg-navy-2/10 font-bold text-navy-2">{m.name.charAt(0)}</span>
+                  <span aria-hidden className="flex size-10 items-center justify-center rounded-full bg-navy-2/10 font-bold text-link">{m.name.charAt(0)}</span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-semibold text-ink">{m.name}</span>
                     <span className="block text-xs text-muted">{m.category} · {m.city}</span>

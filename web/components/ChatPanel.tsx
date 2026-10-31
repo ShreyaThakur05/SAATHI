@@ -149,16 +149,16 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
   const empty = messages.length === 0;
 
   return (
-    <div className={clsx("flex h-full min-h-0 flex-col bg-[#eef3f9]", className)} lang={lang === "en" ? "en" : "hi"}>
+    <div className={clsx("flex h-full min-h-0 flex-col bg-chat", className)} lang={lang === "en" ? "en" : "hi"}>
       <header className="flex items-center gap-3 bg-navy px-4 py-3 text-white">
-        <Logo size={36} className="rounded-full bg-white p-0.5" />
+        <Logo size={36} className="rounded-full bg-card p-0.5" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-semibold">{t("title", lang)}</h1>
           <p className="truncate text-xs text-white/70">{t("subtitle", lang)}</p>
         </div>
         <div role="group" aria-label="Language" className="flex rounded-full bg-white/10 p-0.5 text-[11px] font-semibold">
           {LANGS.map((l) => (
-            <button key={l.id} onClick={() => onLangChange?.(l.id)} aria-pressed={lang === l.id} className={clsx("rounded-full px-2 py-1", lang === l.id ? "bg-white text-navy" : "text-white/80")}>
+            <button key={l.id} onClick={() => onLangChange?.(l.id)} aria-pressed={lang === l.id} className={clsx("rounded-full px-2 py-1", lang === l.id ? "bg-card text-heading" : "text-white/80")}>
               {l.label}
             </button>
           ))}
@@ -182,7 +182,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
             <p className="text-sm text-muted">{t("neverAsk", lang)}</p>
             <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t("tryAsking", lang)}</p>
             {[...(suggested ? [suggested] : []), ...SAMPLE_PROMPTS[lang].filter((p) => p !== suggested)].slice(0, suggested ? 1 : 3).map((p) => (
-              <button key={p} onClick={() => send(p)} className="block w-full rounded-xl bg-white px-3 py-2 text-left text-sm text-ink shadow-sm ring-1 ring-line hover:ring-navy-2">
+              <button key={p} onClick={() => send(p)} className="block w-full rounded-xl bg-card px-3 py-2 text-left text-sm text-ink shadow-sm ring-1 ring-line hover:ring-navy-2">
                 {p}
               </button>
             ))}
@@ -191,7 +191,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
         <ul className="space-y-2">
           {messages.map((m) => (
             <li key={m.id} className={clsx("animate-in flex", m.role === "MERCHANT" ? "justify-end" : "justify-start")}>
-              <div className={clsx("max-w-[85%] rounded-2xl px-3.5 py-2 text-sm shadow-sm", m.role === "MERCHANT" ? "rounded-br-sm bg-[#d8f1fc] text-ink" : "rounded-bl-sm bg-white text-ink")}>
+              <div className={clsx("max-w-[85%] rounded-2xl px-3.5 py-2 text-sm shadow-sm", m.role === "MERCHANT" ? "rounded-br-sm bg-bubble text-ink" : "rounded-bl-sm bg-card text-ink")}>
                 {m.input_mode === "voice" && (
                   <span className="mb-0.5 flex items-center gap-1 text-[11px] font-medium text-muted"><Volume2 className="size-3" aria-hidden />Voice note</span>
                 )}
@@ -205,7 +205,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
           ))}
           {working && (
             <li className="flex justify-start" aria-label={t("working", lang)}>
-              <div className="flex items-center gap-2 rounded-2xl rounded-bl-sm bg-white px-3.5 py-2.5 text-xs text-muted shadow-sm">
+              <div className="flex items-center gap-2 rounded-2xl rounded-bl-sm bg-card px-3.5 py-2.5 text-xs text-muted shadow-sm">
                 <span className="flex gap-1" aria-hidden>
                   {[0, 1, 2].map((i) => (
                     <span key={i} className="size-1.5 rounded-full bg-muted" style={{ animation: `saathi-dot 1s ${i * 0.15}s infinite` }} />
@@ -227,7 +227,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
           e.preventDefault();
           send(text);
         }}
-        className="flex items-center gap-2 border-t border-line bg-white px-3 py-2.5"
+        className="flex items-center gap-2 border-t border-line bg-card px-3 py-2.5"
       >
         <button
           type="button"
@@ -254,7 +254,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
           {working ? <Loader2 className="size-5 animate-spin" aria-hidden /> : <SendHorizontal className="size-5" aria-hidden />}
         </button>
       </form>
-      <p className="bg-white pb-2 text-center text-[11px] text-muted">{t("person", lang)}</p>
+      <p className="bg-card pb-2 text-center text-[11px] text-muted">{t("person", lang)}</p>
     </div>
   );
 }

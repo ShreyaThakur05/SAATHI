@@ -54,7 +54,7 @@ export default function Overview() {
 
       <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
         <Card>
-          <CardHeader title="Recent activity" action={<Link href="/app/transactions" className="flex items-center gap-1 text-xs font-semibold text-navy-2 hover:underline">View all <ArrowRight className="size-3" aria-hidden /></Link>} />
+          <CardHeader title="Recent activity" action={<Link href="/app/transactions" className="flex items-center gap-1 text-xs font-semibold text-link hover:underline">View all <ArrowRight className="size-3" aria-hidden /></Link>} />
           {activity.isPending ? (
             <div className="space-y-2 p-4">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-10" />)}</div>
           ) : activity.isError ? (
@@ -73,7 +73,7 @@ export default function Overview() {
                 ? `${d.open_help_requests} request${d.open_help_requests > 1 ? "s are" : " is"} in progress.`
                 : "No open requests. When something goes wrong, Saathi checks your account, fixes what it is allowed to, and confirms it worked."}
             </p>
-            <Link href="/app/help" className="inline-flex items-center gap-1 font-semibold text-navy-2 hover:underline">See your help requests <ArrowRight className="size-3.5" aria-hidden /></Link>
+            <Link href="/app/help" className="inline-flex items-center gap-1 font-semibold text-link hover:underline">See your help requests <ArrowRight className="size-3.5" aria-hidden /></Link>
             <div className="flex items-center gap-2 border-t border-line pt-3 text-xs text-muted">
               <Chip status={d.merchant.kyc_status === "VERIFIED" ? "VERIFIED" : "PENDING"} label={`KYC ${d.merchant.kyc_status.toLowerCase()}`} />
             </div>

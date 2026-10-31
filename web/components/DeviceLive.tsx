@@ -83,7 +83,7 @@ export function DeviceLive({
   const steps = d.work?.steps.slice(-5) ?? [];
 
   return (
-    <div className="overflow-hidden rounded-xl border border-line bg-white">
+    <div className="overflow-hidden rounded-xl border border-line bg-card">
       <div className="grid lg:grid-cols-[1.35fr_1fr]">
         <div className="relative h-80 bg-navy lg:h-auto lg:min-h-[22rem]">
           {webgl ? (
@@ -91,7 +91,7 @@ export function DeviceLive({
           ) : (
             <p className="flex h-full items-center justify-center p-6 text-center text-sm text-white/80">3D view needs WebGL, which this browser does not provide. The live readings are on the right.</p>
           )}
-          <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold shadow">
+          <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-card/95 px-3 py-1 text-xs font-semibold shadow">
             <span className={clsx("size-2 rounded-full", scene.mode === "healthy" ? "bg-success" : scene.mode === "degraded" ? "bg-warn" : "bg-danger")} aria-hidden />
             <span className={tone}>{MODE_LABEL[scene.mode]}</span>
           </div>

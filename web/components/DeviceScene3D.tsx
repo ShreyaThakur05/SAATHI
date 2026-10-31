@@ -227,6 +227,8 @@ function FitCamera() {
 
 /** A text label drawn to a canvas texture (no DOM overlay, so nothing outside the canvas to mount). */
 function Label({ position, text }: { position: [number, number, number]; text: string }) {
+  // bigger text on narrow screens (phones), where the whole scene is shrunk to fit
+  const compact = useThree((st) => st.size.width < 520);
   const texture = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = 512;
@@ -246,7 +248,7 @@ function Label({ position, text }: { position: [number, number, number]; text: s
     return t;
   }, [text]);
   return (
-    <sprite position={position} scale={[3.3, 3.3 * (96 / 512), 1]}>
+    <sprite position={position} scale={compact ? [4.1, 4.1 * (96 / 512), 1] : [3.3, 3.3 * (96 / 512), 1]}>
       <spriteMaterial map={texture} transparent depthTest={false} />
     </sprite>
   );
@@ -282,7 +284,7 @@ export default function DeviceScene3D({ scene, kind, serial, reducedMotion }: Sc
 
       <Label position={[DEVICE.x, DEVICE.y - 1.3, DEVICE.z]} text={`${kind === "SOUNDBOX" ? "Soundbox" : "Card machine"} ${serial}`} />
       <Label position={[TOWER.x, TOWER.y - 1.7, TOWER.z]} text="Cell site" />
-      <Label position={[GATEWAY.x, GATEWAY.y - 1.3, GATEWAY.z]} text="Paytm device service" />
+      <Label position={[GATEWAY.x, GATEWAY.y - 1.3, GATEWAY.z]} text="Paytm service" />
 
       <OrbitControls enablePan={false} enableZoom={false} autoRotate={!reducedMotion} autoRotateSpeed={0.5} minPolarAngle={0.9} maxPolarAngle={1.45} />
     </Canvas>

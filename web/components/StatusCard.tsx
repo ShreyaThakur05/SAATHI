@@ -50,7 +50,7 @@ export function StatusCard({
           <li key={i.ref} className="flex items-center justify-between gap-3">
             <span className="text-ink">{itemText(i.label, lang)}</span>
             <span className="flex items-center gap-2">
-              <code className="rounded bg-white px-1.5 py-0.5 text-xs font-semibold text-ink ring-1 ring-line">{i.ref}</code>
+              <code className="rounded bg-card px-1.5 py-0.5 text-xs font-semibold text-ink ring-1 ring-line">{i.ref}</code>
               {i.note && <span className={clsx("text-xs font-semibold", s.cls)}>{itemText(i.note, lang)}</span>}
             </span>
           </li>

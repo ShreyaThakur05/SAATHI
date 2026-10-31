@@ -47,10 +47,10 @@ export function SceneExplainer() {
   const reduced = useSyncExternalStore(subscribeMotion, () => window.matchMedia("(prefers-reduced-motion: reduce)").matches, () => false);
   const scene = useMemo(() => deriveScene(fixture(mode)), [mode]);
   return (
-    <div className="overflow-hidden rounded-3xl border border-line bg-white shadow-xl shadow-navy/5">
+    <div className="overflow-hidden rounded-3xl border border-line bg-card shadow-xl shadow-navy/5">
       <div className="relative h-80 bg-navy sm:h-96">
         <Scene scene={scene} kind="SOUNDBOX" serial="SB-77120" reducedMotion={reduced} />
-        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-ink shadow">Sample device</span>
+        <span className="absolute left-3 top-3 rounded-full bg-card/95 px-3 py-1 text-xs font-semibold text-ink shadow">Sample device</span>
       </div>
       <div className="space-y-3 p-4">
         <div role="group" aria-label="Connection state" className="flex flex-wrap gap-2">

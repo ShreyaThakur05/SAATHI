@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Devanagari } from "next/font/google";
 import "./globals.css";
+import { THEME_INIT_SCRIPT } from "@/components/ThemeToggle";
 import { Providers } from "./providers";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -16,7 +17,10 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${deva.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${deva.variable} h-full`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full">
         <Providers>{children}</Providers>
       </body>

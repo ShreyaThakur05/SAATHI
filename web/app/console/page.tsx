@@ -27,7 +27,7 @@ export default function CasesPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Cases</h1>
+        <h1 className="text-2xl font-bold text-heading">Cases</h1>
         <p className="text-sm text-muted">Everything Saathi is working on, and what needs a person.</p>
       </header>
 
@@ -56,7 +56,7 @@ export default function CasesPage() {
             }}
             className={clsx(
               "rounded-full px-3 py-1.5 text-sm font-medium",
-              status === f.id ? "bg-navy-2 text-white" : "bg-white text-muted ring-1 ring-line hover:text-ink",
+              status === f.id ? "bg-navy-2 text-white" : "bg-card text-muted ring-1 ring-line hover:text-ink",
             )}
           >
             {f.label}

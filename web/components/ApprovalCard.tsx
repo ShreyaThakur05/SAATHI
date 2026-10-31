@@ -71,7 +71,7 @@ export function ApprovalCard({ approval, compact = false }: { approval: Approval
           </p>
         </div>
         {!compact && (
-          <a href={`/console/cases/${approval.case_id}`} className="text-xs font-semibold text-navy-2 hover:underline">
+          <a href={`/console/cases/${approval.case_id}`} className="text-xs font-semibold text-link hover:underline">
             Open case
           </a>
         )}

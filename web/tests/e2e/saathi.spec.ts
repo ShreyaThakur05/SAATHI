@@ -391,6 +391,56 @@ test("mobile: the dashboard fits a phone and Saathi opens full screen", async ({
   await ctx.close();
 });
 
+test("playable story: break the soundbox, let Saathi fix it, and the dashboard recovers", async ({ page }) => {
+  await page.goto("/");
+  const story = page.locator("#story");
+  await story.scrollIntoViewIfNeeded();
+  await expect(story.getByText("1 of 1")).toBeVisible();
+  await story.getByRole("button", { name: "Take the Soundbox offline" }).click();
+  await expect(story.getByRole("alert")).toContainText("offline");
+  await story.getByRole("button", { name: "Resolve with Saathi" }).click();
+  await expect(story.getByText("Fixed and proved.")).toBeVisible({ timeout: 15_000 });
+  await expect(story.getByText("Replacement on the way")).toBeVisible();
+  await story.getByRole("button", { name: "Start over" }).click();
+  // the settlement story ends with a person's decision
+  await story.getByRole("button", { name: "A settlement is put on hold" }).click();
+  await story.getByRole("button", { name: "Put the settlement on hold" }).click();
+  await story.getByRole("button", { name: "Resolve with Saathi" }).click();
+  await story.getByRole("button", { name: /Approve as the risk team/ }).click({ timeout: 15_000 });
+  await expect(story.getByText(/A person made the final call/)).toBeVisible();
+});
+
+test("dark mode: the toggle switches the theme and the choice survives a reload", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByRole("button", { name: /dark/i }).first().click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+});
+
+test("mobile: bottom tab bar, More sheet and sign out", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await loginMerchant(page, "ramesh@store.example");
+  const nav = page.getByRole("navigation", { name: /main|primary/i }).last();
+  await expect(nav).toBeVisible();
+  await nav.getByRole("button", { name: "More" }).click();
+  await page.getByRole("button", { name: "Sign out" }).last().click();
+  await expect(page).toHaveURL(/\/login/);
+  await ctx.close();
+});
+
+test("mobile landing: the menu opens and nothing scrolls sideways", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)).toBe(false);
+  await page.getByRole("button", { name: /menu/i }).first().click();
+  await expect(page.getByRole("link", { name: "Break something" }).first()).toBeVisible();
+  await ctx.close();
+});
+
 test.describe("accessibility", () => {
   for (const path of ["/", "/login", "/console/login", "/embed-demo"]) {
     test(`no serious axe violations on ${path}`, async ({ page }) => {

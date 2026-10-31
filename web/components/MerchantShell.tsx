@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useMerchant, useMerchantQuery } from "@/lib/merchantAuth";
 import { Logo } from "./Logo";
+import { MobileNav } from "./MobileNav";
 import { SaathiProvider } from "./SaathiDock";
 import { ToastProvider, useToast } from "./Toaster";
 import { TopBar } from "./TopBar";
@@ -59,12 +60,12 @@ function Inner({ children }: { children: React.ReactNode }) {
   return (
     <SaathiProvider busyCount={busy}>
       <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
-        <aside className="shrink-0 border-line bg-white lg:w-60 lg:border-r">
+        <aside className="hidden shrink-0 border-line bg-card lg:block lg:w-60 lg:border-r">
           <div className="flex items-center justify-between px-5 py-4">
             <Link href="/app" className="flex items-center gap-2.5">
               <Logo size={36} />
               <span>
-                <span className="block text-base font-bold leading-tight text-navy">Saathi</span>
+                <span className="block text-base font-bold leading-tight text-heading">Saathi</span>
                 <span className="block text-xs text-muted">Business dashboard</span>
               </span>
             </Link>
@@ -96,9 +97,14 @@ function Inner({ children }: { children: React.ReactNode }) {
             subtitle={overview.data ? `${overview.data.merchant.city} · ${overview.data.merchant.category}` : undefined}
             onSignOut={logout}
           />
-          <main className="flex-1 p-4 pb-24 sm:p-6 lg:p-8">{children}</main>
+          <main className="flex-1 p-4 pb-28 sm:p-6 lg:p-8 lg:pb-8">{children}</main>
         </div>
       </div>
+      <MobileNav
+        items={NAV.map((n) => ({ ...n, badge: n.href === "/app/help" ? open : undefined }))}
+        isActive={(href) => (href === "/app" ? pathname === "/app" : pathname.startsWith(href))}
+        onSignOut={logout}
+      />
     </SaathiProvider>
   );
 }

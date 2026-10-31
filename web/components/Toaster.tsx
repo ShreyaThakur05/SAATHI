@@ -27,8 +27,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map((t) => {
           const Icon = t.tone === "success" ? CheckCircle2 : Info;
           return (
-            <div key={t.id} className="animate-in pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-white p-3 shadow-lg">
-              <Icon className={t.tone === "success" ? "mt-0.5 size-5 text-success" : "mt-0.5 size-5 text-navy-2"} aria-hidden />
+            <div key={t.id} className="animate-in pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-card p-3 shadow-lg">
+              <Icon className={t.tone === "success" ? "mt-0.5 size-5 text-success" : "mt-0.5 size-5 text-link"} aria-hidden />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-ink">{t.title}</p>
                 {t.body && <p className="text-sm text-muted">{t.body}</p>}

@@ -35,9 +35,9 @@ export function CaseView({ caseId, embedded = false }: { caseId: number; embedde
       )}
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className={embedded ? "text-base font-bold text-navy" : "text-2xl font-bold text-navy"}>{c.summary}</h1>
+          <h1 className={embedded ? "text-base font-bold text-heading" : "text-2xl font-bold text-heading"}>{c.summary}</h1>
           <p className="mt-1 text-sm text-muted">
-            Case #{c.id} · <Link href={`/console/merchants/${c.merchant_id}`} className="font-medium text-navy-2 hover:underline">{c.merchant_name ?? `Merchant ${c.merchant_id}`}</Link> · {humanize(c.product.toLowerCase())}
+            Case #{c.id} · <Link href={`/console/merchants/${c.merchant_id}`} className="font-medium text-link hover:underline">{c.merchant_name ?? `Merchant ${c.merchant_id}`}</Link> · {humanize(c.product.toLowerCase())}
           </p>
         </div>
         <StatusPill status={c.status} />

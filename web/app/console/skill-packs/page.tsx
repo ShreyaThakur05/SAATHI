@@ -61,7 +61,7 @@ export default function SkillPacksPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-5">
       <header>
-        <h1 className="text-2xl font-bold text-navy">Skill Packs</h1>
+        <h1 className="text-2xl font-bold text-heading">Skill Packs</h1>
         <p className="text-sm text-muted">One core, a small file per product. These files are what the rules engine actually reads.</p>
       </header>
       {q.isPending ? <div className="grid gap-4 md:grid-cols-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-64" />)}</div> : q.isError ? <ErrorState message={q.error.message} onRetry={() => q.refetch()} /> : <div className="grid items-start gap-4 md:grid-cols-2">{q.data.map((p) => <PackCard key={p.skill_pack} p={p} />)}</div>}
