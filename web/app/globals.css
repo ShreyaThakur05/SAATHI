@@ -30,18 +30,19 @@
 }
 
 [data-theme="dark"] {
-  --page: #0a1326;
-  --card: #111c34;
-  --surface: #0e1830;
-  --ink: #e7edf9;
-  --muted: #a3b3cf;
-  --line: #243350;
-  --heading: #eef3ff;
-  --link: #8fb0ff;
-  --eyebrow: #b7a4ff;
-  --chat: #0c1629;
-  --bubble: #1d3c63;
-  --navy-2: #3d63e0;
+  /* Paytm's deep navy with its signature cyan as the accent */
+  --page: #001230;
+  --card: #04204d;
+  --surface: #021a40;
+  --ink: #eaf2ff;
+  --muted: #a9bddc;
+  --line: #123a77;
+  --heading: #ffffff;
+  --link: #00baf2;
+  --eyebrow: #5fd4ff;
+  --chat: #021a40;
+  --bubble: #0b4a86;
+  --navy-2: #1f5fd6;
   --lav: #a78bfa;
   color-scheme: dark;
 }

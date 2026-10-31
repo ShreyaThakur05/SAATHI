@@ -21,7 +21,7 @@ export function LandingMenu() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} aria-label="Open menu" aria-haspopup="dialog" className="flex size-11 items-center justify-center rounded-full text-ink ring-1 ring-line hover:bg-surface lg:hidden">
+      <button type="button" onClick={() => setOpen(true)} aria-label="Open menu" aria-haspopup="dialog" className="flex size-11 items-center justify-center rounded-full text-ink hover:bg-surface max-sm:size-10 sm:ring-1 sm:ring-line xl:hidden">
         <Menu className="size-5" aria-hidden />
       </button>
       <Sheet open={open} title="Menu" onClose={() => setOpen(false)}>

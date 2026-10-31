@@ -64,23 +64,24 @@ export default function Home() {
     <LandingAgentProvider>
     <div className="bg-page text-ink">
       <header className="sticky top-0 z-30 border-b border-line bg-card/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5">
+        <div className="mx-auto flex max-w-[1680px] items-center justify-between gap-6 px-4 py-2.5 sm:px-6 xl:px-10">
           <Link href="/" className="flex items-center gap-2.5">
             <Logo size={40} />
             <span className="text-xl font-bold tracking-tight text-heading">Saathi</span>
           </Link>
-          <nav aria-label="Sections" className="hidden items-center gap-7 text-sm font-medium text-muted lg:flex">
+          <nav aria-label="Sections" className="hidden items-center gap-9 whitespace-nowrap text-sm font-medium text-muted xl:flex">
             <a href="#signin" className="hover:text-ink">Sign in</a>
             <a href="#talk" className="hover:text-ink">Talk to Saathi</a>
+            <a href="#story" className="hover:text-ink">Break something</a>
             <a href="#integrate" className="hover:text-ink">Integration</a>
             <a href="#live" className="hover:text-ink">Live view</a>
             <a href="#safety" className="hover:text-ink">Safety</a>
             <a href="#faq" className="hover:text-ink">FAQ</a>
           </nav>
-          <div className="flex items-center gap-2">
-            <ThemeToggle className="hidden sm:inline-flex" />
-            <Link href="/console" className="hidden rounded-full border border-navy-2/30 px-4 py-2 text-sm font-semibold text-link hover:bg-surface sm:block">Team console sign in</Link>
-            <Link href="/login" className="rounded-full bg-navy-2 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-navy">Merchant sign in</Link>
+          <div className="flex items-center gap-2 max-sm:rounded-full max-sm:border max-sm:border-line max-sm:bg-card max-sm:p-1 sm:gap-3">
+            <span className="hidden sm:block"><ThemeToggle /></span>
+            <Link href="/console" className="hidden rounded-full border border-navy-2/30 px-4 py-2 text-sm font-semibold text-link hover:bg-surface sm:block whitespace-nowrap">Team console sign in</Link>
+            <Link href="/login" className="rounded-full bg-navy-2 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-navy whitespace-nowrap max-sm:px-4 max-sm:shadow-none">Merchant sign in</Link>
             <LandingMenu />
           </div>
         </div>
@@ -88,7 +89,7 @@ export default function Home() {
 
       <main>
         {/* ---------------------------------------------------------------- hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#eef6ff] via-[#f4f2ff] to-white dark:from-[#0b1530] dark:via-[#111a3d] dark:to-[#0a1326]">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#eef6ff] via-[#f4f2ff] to-white dark:from-[#001230] dark:via-[#032a63] dark:to-[#001230]">
           <div aria-hidden className="pointer-events-none absolute -right-32 -top-32 size-[34rem] rounded-full bg-lav/15 blur-3xl" />
           <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-12 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:pb-14 lg:pt-10">
             <div>
