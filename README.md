@@ -39,7 +39,7 @@ Or everything in containers: `cd infra && docker compose --profile full up --bui
 | | |
 |---|---|
 | **Real** | Merchant dashboard and team console, rules engine and limits, Skill Packs (YAML), case state machine, idempotent actions, the Prove step, append-only audit log, approvals with roles, merchant and staff auth, PII masking, SSE live timeline, embeddable widget, browser speech-to-text |
-| **Real when a key is set** | Understanding via Claude (schema-validated). Without a key a deterministic keyword fallback is used and labelled as such everywhere |
+| **Real when a key is set** | Understanding via Sarvam (or Claude), schema-validated. Without a key a deterministic keyword fallback is used and labelled as such everywhere. See [docs/KEYS.md](docs/KEYS.md) |
 | **Simulated** | Device, billing, logistics, settlement, KYC and biller systems, and the payment gateway (built to the shape of Paytm's Refund / Refund Status APIs, backed by Postgres tables) |
 | **Not built** | WhatsApp channel, server-side Indian-language STT (Sarvam/Bhashini), UPI and Loans Skill Packs (shown as roadmap), webhooks, SSO |
 
@@ -67,12 +67,13 @@ cd api && uv run python -m app.eval.run                                    # Und
 * [Architecture, safety properties, data model](docs/ARCHITECTURE.md)
 * [AI pipeline, prompts, evaluation results (including what was *not* measured)](docs/AI.md)
 * [Embedding in a Paytm dashboard](docs/EMBEDDING.md)
+* [Keys and where to get them](docs/KEYS.md)
 * [Deployment and configuration](docs/DEPLOY.md)
 * [Original plan and decisions](docs/PLAN.md)
 
 ## Known limitations
 
-* The Claude understanding path has not been run against the live API here; only its validation and fallbacks are tested.
+* The Sarvam and Claude understanding paths have not been run against their live APIs here; only request shape, validation and fallbacks are tested with mocks.
 * The keyword fallback scored 85% intent / 90% injection accuracy on a small held-out set (docs/AI.md). Misses create no case.
 * Rate limiting is in-process. Staff tokens live in `sessionStorage`. Both are fine for a prototype, not for production.
 * The "₹100/day compensation" and refund deadline length are configured assumptions, not verified against current RBI/NPCI rules.

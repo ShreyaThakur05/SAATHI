@@ -38,7 +38,7 @@ export interface CaseSummary {
   language: Lang;
   handled_by_person: boolean;
   injection_suspected: boolean;
-  understanding_mode: "claude" | "keyword";
+  understanding_mode: "claude" | "sarvam" | "keyword";
   ai_cost_inr: string;
   refund_deadline_at: string | null;
   created_at: string;
@@ -239,7 +239,7 @@ export interface HelpRequest {
 export interface SystemStatus {
   env: string;
   version: string;
-  understanding: { mode: "claude" | "keyword"; model: string | null };
+  understanding: { mode: "claude" | "sarvam" | "keyword"; model: string | null };
   integrations: { name: string; kind: "simulated" | "live" | "not_configured"; detail: string }[];
   demo_tools_enabled: boolean;
   sim_latency_ms: number;

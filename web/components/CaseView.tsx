@@ -7,7 +7,7 @@ import { StatusPill } from "@/components/StatusPill";
 import { SixStepBar, StepList } from "@/components/Timeline";
 import { Badge, Card, CardHeader, ErrorState, Skeleton } from "@/components/ui/primitives";
 import { useStaff, useStaffQuery } from "@/lib/auth";
-import { formatDuration, formatInr, humanize } from "@/lib/format";
+import { formatDuration, formatInr, humanize, understandingLabel } from "@/lib/format";
 import { useCaseStream } from "@/lib/useCaseStream";
 import type { CaseStatus } from "@/lib/types";
 
@@ -56,7 +56,7 @@ export function CaseView({ caseId, embedded = false }: { caseId: number; embedde
             </span>
           )}
           <span>
-            Understanding: <strong className="text-ink">{c.understanding_mode === "claude" ? "Claude" : "keyword fallback"}</strong>
+            Understanding: <strong className="text-ink">{understandingLabel(c.understanding_mode)}</strong>
           </span>
           <span>AI cost: <strong className="text-ink">{formatInr(c.ai_cost_inr)}</strong></span>
           {c.refund_deadline_at && (

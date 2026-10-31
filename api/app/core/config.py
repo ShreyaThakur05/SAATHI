@@ -1,6 +1,7 @@
 from functools import lru_cache
+from typing import Literal
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,7 +27,13 @@ class Settings(BaseSettings):
     # Seeds demo accounts/data and enables /v1/demo/*. Off by default; refused in production.
     demo_tools_enabled: bool = False
 
-    # AI. Without a key, Understand uses the deterministic keyword fallback.
+    # AI. Without any key, Understand uses the deterministic keyword fallback.
+    # llm_provider "auto" picks Sarvam if its key is set, else Anthropic, else none.
+    llm_provider: Literal["auto", "sarvam", "anthropic", "none"] = "auto"
+    sarvam_api_key: SecretStr | None = None
+    sarvam_base_url: str = "https://api.sarvam.ai"
+    sarvam_model: str = "sarvam-105b-conversations"  # 32K context, built for low-latency chat
+    sarvam_reasoning_effort: Literal["none", "low", "medium", "high", "max"] = "none"
     anthropic_api_key: SecretStr | None = None
     understand_model: str = "claude-haiku-5-5"
     llm_timeout_s: float = 8.0
@@ -37,6 +44,30 @@ class Settings(BaseSettings):
     # Simulation
     sim_latency_ms: int = 350
     sim_refund_polls: int = 2
+
+    @field_validator("sarvam_api_key", "anthropic_api_key", mode="before")
+    @classmethod
+    def _blank_key_is_unset(cls, v: object) -> object:
+        # `SAATHI_SARVAM_API_KEY=` in an env file must mean "not set", not "set to empty".
+        return None if isinstance(v, str) and not v.strip() else v
+
+    def resolved_provider(self) -> Literal["sarvam", "anthropic", "none"]:
+        """Which LLM actually runs, given the explicit choice and the keys that are present."""
+        if self.llm_provider == "sarvam":
+            return "sarvam" if self.sarvam_api_key else "none"
+        if self.llm_provider == "anthropic":
+            return "anthropic" if self.anthropic_api_key else "none"
+        if self.llm_provider == "none":
+            return "none"
+        if self.sarvam_api_key:
+            return "sarvam"
+        return "anthropic" if self.anthropic_api_key else "none"
+
+    @property
+    def llm_model(self) -> str | None:
+        return {"sarvam": self.sarvam_model, "anthropic": self.understand_model}.get(
+            self.resolved_provider()
+        )
 
 
 @lru_cache

@@ -7,6 +7,7 @@ import { Dialog } from "@/components/ui/Dialog";
 import { Badge, Button, Card, CardHeader, ErrorState, Skeleton } from "@/components/ui/primitives";
 import { ApiError } from "@/lib/api";
 import { useStaff, useStaffQuery } from "@/lib/auth";
+import { understandingLabel } from "@/lib/format";
 
 const KIND = {
   simulated: { label: "Simulated", tone: "warn" as const, icon: FlaskConical },
@@ -56,11 +57,11 @@ export default function SettingsPage() {
           <div><dt className="text-xs text-muted">System latency (simulated)</dt><dd className="font-medium">{s.sim_latency_ms} ms</dd></div>
           <div>
             <dt className="text-xs text-muted">Understanding</dt>
-            <dd className="font-medium">{s.understanding.mode === "claude" ? `Claude (${s.understanding.model})` : "Keyword fallback"}</dd>
+            <dd className="font-medium">{s.understanding.mode === "keyword" ? "Keyword fallback" : `${understandingLabel(s.understanding.mode)} (${s.understanding.model})`}</dd>
           </div>
         </dl>
         {s.understanding.mode === "keyword" && (
-          <p className="border-t border-line px-4 py-3 text-sm text-muted">No model key is configured, so a deterministic keyword classifier reads merchant messages. It works for common phrasings and fails safe (an unrecognised message creates no case). Set <code className="rounded bg-surface px-1">SAATHI_ANTHROPIC_API_KEY</code> to use the language model.</p>
+          <p className="border-t border-line px-4 py-3 text-sm text-muted">No model key is configured, so a deterministic keyword classifier reads merchant messages. It works for common phrasings and fails safe (an unrecognised message creates no case). Set <code className="rounded bg-surface px-1">SAATHI_SARVAM_API_KEY</code> to use a language model.</p>
         )}
       </Card>
 

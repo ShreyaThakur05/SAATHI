@@ -361,14 +361,16 @@ def skill_packs(rt: RuntimeDep, _: StaffDep) -> list[sc.SkillPackOut]:
 @router.get("/system/status", tags=["console"])
 def system_status(settings: SettingsDep, _: StaffDep) -> dict[str, object]:
     """What this environment is connected to, stated plainly (console Settings page)."""
-    llm = settings.anthropic_api_key is not None
+    provider = settings.resolved_provider()
     sim = "Simulated: same shape as the real system, backed by this database"
     return {
         "env": settings.env,
         "version": "0.1.0",
         "understanding": {
-            "mode": "claude" if llm else "keyword",
-            "model": settings.understand_model if llm else None,
+            "mode": "keyword"
+            if provider == "none"
+            else ("claude" if provider == "anthropic" else provider),
+            "model": settings.llm_model,
         },
         "integrations": [
             {"name": "Device status and remote fixes", "kind": "simulated", "detail": sim},

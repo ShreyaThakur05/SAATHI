@@ -54,3 +54,6 @@ export function formatDate(iso: string, withTime = false): string {
     ...(withTime ? { hour: "2-digit", minute: "2-digit" } : {}),
   });
 }
+
+export const understandingLabel = (mode: string) =>
+  mode === "sarvam" ? "Sarvam" : mode === "claude" ? "Claude" : "keyword fallback";

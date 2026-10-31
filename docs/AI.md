@@ -5,7 +5,7 @@
 | Step | Technology | Why |
 |---|---|---|
 | Speech to text | Browser Web Speech API (real). Server STT (Sarvam/Bhashini) is **not built** | No credentials; browser STT is real and works for `hi-IN`/`en-IN` in Chrome |
-| Understand | Claude Haiku-class model via tool-use JSON schema, **or** deterministic keyword fallback | Classification and splitting are what an LLM is good at; output is schema-validated |
+| Understand | **Sarvam** (`sarvam-105b-conversations`, JSON-schema output) or Claude, **or** the deterministic keyword fallback | Classification and splitting are what an LLM is good at; output is schema-validated |
 | Decide | Python rules engine | Must be deterministic and testable |
 | Reply | Templates in hi / hinglish / en | A money statement must not be free-text LLM output |
 
@@ -13,8 +13,9 @@ No agent framework, no vector database, no RAG: nothing in the pitch needs retri
 
 ## Model selection
 
-Understanding is a short classification task, so the default is the smallest, fastest model
-(`SAATHI_UNDERSTAND_MODEL=claude-haiku-5-5`). Latency matters because the merchant is waiting; cost per
+Understanding is a short classification task, so the default is Sarvam's low-latency conversational model
+(`SAATHI_SARVAM_MODEL=sarvam-105b-conversations`, 32K context, reasoning off). Sarvam suits Hindi and Hinglish merchants and the
+key is the same one a server-side Indian-language speech model would use later. Claude remains an optional provider. Latency matters because the merchant is waiting; cost per
 ticket is a headline number in the pitch. A larger model is a config change, not a code change.
 Hosted rather than self-hosted: no GPU operations for a prototype. The deck's "small open-source model" is
 not used (a schema-validated hosted call plus a keyword fallback does the same job with no infrastructure).
@@ -54,10 +55,11 @@ independent benchmark, and 20 examples is a small sample. The three held-out mis
 All misses fail closed: an unrecognised message creates no case, so no action can run. They do show the keyword
 fallback is a safety net rather than a replacement for the model.
 
-**Not measured:** the Claude path has never been run against the live API in this environment (no key). Its
-schema handling and fallbacks are tested with a fake client; accuracy, latency and token cost of the real model
-are unmeasured. Set `ANTHROPIC_API_KEY` (as `SAATHI_ANTHROPIC_API_KEY`) and the two `SAATHI_LLM_*_USD_PER_MTOK`
-rates, run the eval again, and the Insights page will start reporting a real ₹/ticket AI cost.
+**Not measured:** neither LLM path has been run against its live API in this environment (no key). Request shape,
+schema validation, fallbacks and PII masking are tested with a mock HTTP transport (`tests/test_sarvam.py`) built from
+Sarvam's documentation; accuracy, latency and token cost of the real model are unmeasured, and the exact behaviour of
+Sarvam's `json_schema` mode with this schema is unconfirmed until a key is used. Set `SAATHI_SARVAM_API_KEY` and the two
+`SAATHI_LLM_*_USD_PER_MTOK` rates (see docs/KEYS.md), run the eval again, and Insights will report a real ₹/ticket cost.
 
 ## Latency and cost
 

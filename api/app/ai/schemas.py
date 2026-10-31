@@ -27,5 +27,5 @@ class Understanding(BaseModel):
     legal_mention: bool = False
     sensitive_shared: bool = False  # merchant typed a PIN/OTP/card number
     confidence: float = Field(ge=0, le=1)
-    mode: Literal["claude", "keyword"] = "keyword"
+    mode: Literal["claude", "sarvam", "keyword"] = "keyword"
     ai_cost_inr: Decimal = Decimal("0")

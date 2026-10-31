@@ -29,7 +29,7 @@ export default function InsightsPage() {
   if (q.isPending) return <div className="grid gap-3 md:grid-cols-3">{Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-28" />)}</div>;
   if (q.isError) return <ErrorState message={q.error.message} onRetry={() => q.refetch()} />;
   const m = q.data;
-  const claude = m.understanding_modes["claude"] ?? 0;
+  const claude = (m.understanding_modes["claude"] ?? 0) + (m.understanding_modes["sarvam"] ?? 0);
   const keyword = m.understanding_modes["keyword"] ?? 0;
 
   return (

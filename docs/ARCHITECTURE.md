@@ -10,7 +10,7 @@ that reads a Skill Pack, and every action is re-checked against the system of re
 flowchart LR
   M[Merchant<br/>chat / voice] -->|POST /v1/messages| API
   subgraph API[FastAPI]
-    IN[Intake<br/>PII mask, store] --> U[Understand<br/>Claude or keyword fallback<br/>schema-validated]
+    IN[Intake<br/>PII mask, store] --> U[Understand<br/>Sarvam or Claude, else keyword fallback<br/>schema-validated]
     U --> C[(Cases)]
     C --> O[Orchestrator<br/>state machine]
     O --> L[Look up<br/>connectors]
@@ -78,7 +78,7 @@ only reached through the `Protocol`s in `app/connectors/base.py`.
 ```
 api/app/
   api/            HTTP: routes (console + merchant-facing), merchant dashboard API, schemas, auth, health
-  ai/             understand (Claude + keyword fallback), PII masking, prompts, output schema
+  ai/             understand (Sarvam or Claude + keyword fallback), PII masking, prompts, output schema
   rules/          the rules engine (pure functions)
   skillpacks/     YAML packs + loader/validation
   services/       orchestrator, playbooks per product, actions (act+prove), replies, metrics

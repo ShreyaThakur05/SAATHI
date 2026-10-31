@@ -25,6 +25,7 @@ services:
       SAATHI_CORS_ORIGINS: '["http://localhost:3000"]'
       SAATHI_DEMO_TOOLS_ENABLED: "true"
       SAATHI_HOST_API_KEY: dev-host-key
+      SAATHI_SARVAM_API_KEY: ${SAATHI_SARVAM_API_KEY:-}
     ports:
       - "8000:8000"
     depends_on:
