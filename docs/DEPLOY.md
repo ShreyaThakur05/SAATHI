@@ -146,3 +146,9 @@ cd infra && docker compose --profile full up --build   # db :5433, api :8000, we
 * Retention policy for `messages` and `audit_log` (messages are PII-masked, but still personal data).
 * Error monitoring (e.g. Sentry) and metrics export; logs are structured JSON on stdout.
 * Move the staff token from `sessionStorage` to an httpOnly cookie.
+
+### If Render says `open Dockerfile: no such file or directory`
+
+The service was created by hand instead of from the Blueprint, so it looks for `Dockerfile` in the repo root. The repo now
+has a root `Dockerfile` that builds the API, so a redeploy of the latest commit works. The Blueprint route
+(**New, Blueprint**) is still the recommended one because it also creates the database and the generated secrets.
