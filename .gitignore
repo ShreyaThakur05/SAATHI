@@ -1,0 +1,28 @@
+# secrets and local config: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# node / next
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# test output
+test-results/
+playwright-report/
+
+# os / editor / logs
+.DS_Store
+*.log

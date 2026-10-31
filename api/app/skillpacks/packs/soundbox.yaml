@@ -1,0 +1,17 @@
+skill_pack: soundbox
+version: 1
+product: SOUNDBOX
+status: live
+title: Soundbox
+intents: [device_fault, rent_dispute]
+allowed_actions: [remote_fix, replace_device, reverse_rent]
+action_limits_inr:
+  reverse_rent: 500
+max_prior_claims: 0   # first claim only; a repeat goes to a person
+hand_off_if: [fraud_flag, repeat_claim, legal_mention, records_mismatch]
+proof:
+  remote_fix: device status == ONLINE
+  replace_device: replacement order found in logistics system
+  reverse_rent: reversal status == SUCCESS
+params:
+  days_in_month: 30

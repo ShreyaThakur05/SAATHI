@@ -1,0 +1,15 @@
+skill_pack: bill_payments
+version: 1
+product: BILL_PAYMENT
+status: live
+title: Bill Payments
+intents: [bill_payment_failed]
+allowed_actions: [refund_bill]
+action_limits_inr:
+  refund_bill: 2000      # ASSUMPTION: the deck gives no bill-refund limit
+max_prior_claims: 1
+hand_off_if: [fraud_flag, repeat_claim, legal_mention, records_mismatch]
+proof:
+  refund_bill: refund status == SUCCESS
+params:
+  refund_deadline_days: 5   # ASSUMPTION: confirm against current RBI/NPCI turnaround rules

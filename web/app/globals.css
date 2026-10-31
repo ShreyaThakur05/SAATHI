@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* Design tokens. Hosts can re-theme the embedded chat by overriding --brand (see lib/embed.ts). */
+:root {
+  --brand: #00b9f5;
+  --brand-ink: #003b55;
+  --navy: #0a1f3c;
+  --navy-2: #002e6e;
+  --ink: #0f172a;
+  --muted: #5b6b82;
+  --line: #e3e9f2;
+  --surface: #f5f8fc;
+  --success: #0b7a50;
+  --warn: #8f5b00;
+  --danger: #b42d2d;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-inter), var(--font-deva), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--navy-2);
+  outline-offset: 2px;
+}
+
+@keyframes saathi-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes saathi-dot {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes saathi-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-in { animation: saathi-in 0.25s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

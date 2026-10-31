@@ -1,0 +1,12 @@
+skill_pack: card_machine
+version: 1
+product: CARD_MACHINE
+status: live
+title: Card Machine
+intents: [card_machine_issue]
+allowed_actions: [repair_device, replace_device]
+max_prior_claims: 1
+hand_off_if: [fraud_flag, repeat_claim, legal_mention, records_mismatch]
+proof:
+  repair_device: device ONLINE and pairing OK
+  replace_device: replacement order found in logistics system

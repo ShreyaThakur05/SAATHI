@@ -1,0 +1,50 @@
+# Local development: `docker compose up -d db` for Postgres only (the API and web run on the host).
+# Full stack in containers:  docker compose --profile full up --build
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: saathi
+      POSTGRES_PASSWORD: saathi
+      POSTGRES_DB: saathi
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saathi"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: ../api
+    profiles: ["full"]
+    environment:
+      SAATHI_DATABASE_URL: postgresql+psycopg://saathi:saathi@db:5432/saathi
+      SAATHI_CORS_ORIGINS: '["http://localhost:3000"]'
+      SAATHI_DEMO_TOOLS_ENABLED: "true"
+      SAATHI_HOST_API_KEY: dev-host-key
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    profiles: ["full"]
+    environment:
+      SAATHI_API_URL: http://api:8000
+      SAATHI_HOST_API_KEY: dev-host-key
+      DEMO_MODE: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

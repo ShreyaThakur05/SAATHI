@@ -1,0 +1,12 @@
+skill_pack: settlement_kyc
+version: 1
+product: SETTLEMENT_KYC
+status: live
+title: Settlements and KYC
+intents: [settlement_held]
+allowed_actions: [request_document, release_settlement_hold]
+requires_person: [release_settlement_hold]
+hand_off_if: [fraud_flag, legal_mention, records_mismatch]
+proof:
+  request_document: document status == VERIFIED
+  release_settlement_hold: settlement no longer HELD

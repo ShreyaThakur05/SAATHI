@@ -1,0 +1,6 @@
+skill_pack: upi
+version: 1
+product: UPI
+status: roadmap
+title: UPI Payments
+intents: [upi_issue]

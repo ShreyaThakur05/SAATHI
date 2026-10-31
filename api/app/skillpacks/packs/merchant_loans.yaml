@@ -1,0 +1,6 @@
+skill_pack: merchant_loans
+version: 1
+product: LOANS
+status: roadmap
+title: Merchant Loans
+intents: [loan_query]
