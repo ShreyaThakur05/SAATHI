@@ -85,19 +85,19 @@ export default function Home() {
         {/* ---------------------------------------------------------------- hero */}
         <section className="relative overflow-hidden bg-gradient-to-br from-[#eef6ff] via-[#f4f2ff] to-white">
           <div aria-hidden className="pointer-events-none absolute -right-32 -top-32 size-[34rem] rounded-full bg-lav/15 blur-3xl" />
-          <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-16 pt-12 lg:grid-cols-[1fr_1.1fr] lg:pb-24 lg:pt-16">
+          <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 pb-12 pt-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:pb-14 lg:pt-10">
             <div>
               <p className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-navy-2 shadow-sm ring-1 ring-line">
                 <Blocks className="size-3.5 text-[#5b3fc4]" aria-hidden /> Built to plug into the products you already run
               </p>
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.1] tracking-tight text-navy sm:text-5xl">
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.1] tracking-tight text-navy sm:text-4xl lg:text-[2.45rem]">
                 Add an AI teammate to the products you already run.
               </h1>
-              <p className="mt-3 bg-gradient-to-r from-navy-2 via-[#4f5fe0] to-[#7050e0] bg-clip-text text-2xl font-bold text-transparent">Problems solved, not just answered.</p>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+              <p className="mt-2 bg-gradient-to-r from-navy-2 via-[#4f5fe0] to-[#7050e0] bg-clip-text text-xl font-bold text-transparent">Problems solved, not just answered.</p>
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-muted">
                 Saathi sits inside your merchant app and support console and connects to your back-office systems. It checks them, makes the fix within your rules, proves it worked, and hands the judgement calls to your team.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 <Link href="/login" className="inline-flex items-center gap-2 rounded-full bg-navy-2 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-navy-2/25 hover:bg-navy">
                   <Store className="size-4" aria-hidden /> Merchant sign in <ArrowRight className="size-4" aria-hidden />
                 </Link>
@@ -106,13 +106,13 @@ export default function Home() {
                 </Link>
                 <Link href="/embed-demo" className="px-2 py-3 text-sm font-semibold text-navy-2 hover:underline">See it inside a dashboard &rarr;</Link>
               </div>
-              <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
                 <li className="flex items-center gap-2"><Code2 className="size-4 text-navy-2" aria-hidden /> Drop-in widget and API</li>
                 <li className="flex items-center gap-2"><Languages className="size-4 text-navy-2" aria-hidden /> Hindi, Hinglish, English</li>
                 <li className="flex items-center gap-2"><ShieldCheck className="size-4 text-navy-2" aria-hidden /> Limits and audit in code</li>
               </ul>
             </div>
-            <AgentDemo className="mx-auto w-full max-w-2xl" />
+            <AgentDemo className="mx-auto w-full max-w-[40rem]" />
           </div>
         </section>
 

@@ -9,12 +9,12 @@ export const ACK = "Samajh gaya. Main 2 cheezein check kar raha hoon: aapka devi
 export const REPLY = "Remote fix kaam nahi aaya, isliye naya device bhej rahe hain. 2 din ka rent ₹20 wapas kar diya hai.";
 
 export const STEPS = [
-  { at: "0:02", kind: "Listen", text: "Heard the voice note and split it into 2 cases: device fault and rent charge" },
-  { at: "0:05", kind: "Look up", text: "Device offline for 49 hours, weak SIM signal" },
-  { at: "0:12", kind: "Decide", text: "Remote fix tried and failed, so it is a hardware fault. Rules allow a replacement" },
-  { at: "0:18", kind: "Act", text: "Replacement order created. Checked: order found in the logistics system" },
-  { at: "0:24", kind: "Prove", text: "Reversed ₹20 rent, under the ₹500 limit. Checked: refund status SUCCESS" },
-  { at: "0:31", kind: "Reply", text: "Answered in Hindi with both reference numbers and closed the cases" },
+  { at: "0:02", kind: "Listen", text: "Heard the voice note and split it into 2 cases: device fault and rent charge", short: "Heard the note, split into 2 cases" },
+  { at: "0:05", kind: "Look up", text: "Device offline for 49 hours, weak SIM signal", short: "Device offline 49 h, weak SIM" },
+  { at: "0:12", kind: "Decide", text: "Remote fix tried and failed, so it is a hardware fault. Rules allow a replacement", short: "Remote fix failed: hardware fault" },
+  { at: "0:18", kind: "Act", text: "Replacement order created. Checked: order found in the logistics system", short: "Replacement ordered, found in logistics" },
+  { at: "0:24", kind: "Prove", text: "Reversed ₹20 rent, under the ₹500 limit. Checked: refund status SUCCESS", short: "₹20 rent reversed, refund SUCCESS" },
+  { at: "0:31", kind: "Reply", text: "Answered in Hindi with both reference numbers and closed the cases", short: "Replied in Hindi, cases closed" },
 ] as const;
 
 const VOICE_START = 500;
