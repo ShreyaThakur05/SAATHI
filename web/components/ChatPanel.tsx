@@ -7,6 +7,7 @@ import { ApiError, merchantApi } from "@/lib/api";
 import { SAMPLE_PROMPTS, t } from "@/lib/i18n";
 import type { ChatMessage, Lang } from "@/lib/types";
 import { useSpeech } from "@/lib/useSpeech";
+import { Logo } from "./Logo";
 import { StatusCard } from "./StatusCard";
 
 interface Props {
@@ -150,7 +151,7 @@ export function ChatPanel({ token, lang, onLangChange, onHostEvent, onActivity, 
   return (
     <div className={clsx("flex h-full min-h-0 flex-col bg-[#eef3f9]", className)} lang={lang === "en" ? "en" : "hi"}>
       <header className="flex items-center gap-3 bg-navy px-4 py-3 text-white">
-        <span className="flex size-9 items-center justify-center rounded-full bg-brand text-sm font-bold text-brand-ink" aria-hidden>S</span>
+        <Logo size={36} className="rounded-full bg-white p-0.5" />
         <div className="min-w-0 flex-1">
           <h1 className="truncate text-sm font-semibold">{t("title", lang)}</h1>
           <p className="truncate text-xs text-white/70">{t("subtitle", lang)}</p>

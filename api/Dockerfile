@@ -9,5 +9,5 @@ RUN useradd -m saathi && chown -R saathi /app
 USER saathi
 ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
-HEALTHCHECK CMD python -c "import urllib.request as u; u.urlopen('http://localhost:8000/healthz')" || exit 1
+HEALTHCHECK CMD python -c "import os, urllib.request as u; u.urlopen('http://localhost:' + os.environ.get('PORT', '8000') + '/healthz')" || exit 1
 CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

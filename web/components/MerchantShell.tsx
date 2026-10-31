@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useMerchant, useMerchantQuery } from "@/lib/merchantAuth";
+import { Logo } from "./Logo";
 import { SaathiProvider } from "./SaathiDock";
 import { ToastProvider, useToast } from "./Toaster";
 import { TopBar } from "./TopBar";
@@ -60,9 +61,12 @@ function Inner({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
         <aside className="shrink-0 border-line bg-white lg:w-60 lg:border-r">
           <div className="flex items-center justify-between px-5 py-4">
-            <Link href="/app" className="block">
-              <p className="text-lg font-bold text-navy">Business <span className="text-brand-ink">dashboard</span></p>
-              <p className="max-w-44 truncate text-xs text-muted">{merchant?.name}</p>
+            <Link href="/app" className="flex items-center gap-2.5">
+              <Logo size={36} />
+              <span>
+                <span className="block text-base font-bold leading-tight text-navy">Saathi</span>
+                <span className="block text-xs text-muted">Business dashboard</span>
+              </span>
             </Link>
           </div>
           <nav aria-label="Dashboard" className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">

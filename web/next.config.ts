@@ -4,7 +4,8 @@ import type { NextConfig } from "next";
 const frameAncestors = process.env.FRAME_ANCESTORS ?? "'self' http://localhost:3000";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // The Docker image sets STANDALONE=1; Vercel and `next start` use the default output.
+  output: process.env.STANDALONE === "1" ? "standalone" : undefined,
   turbopack: {
     rules: {
       "*.css": {

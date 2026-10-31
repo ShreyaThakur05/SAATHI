@@ -1,0 +1,38 @@
+# Render Blueprint: the Saathi API (Docker) and its Postgres database.
+# The web app is deployed separately on Vercel (see docs/DEPLOY.md).
+databases:
+  - name: saathi-db
+    databaseName: saathi
+    user: saathi
+    plan: free          # check Render's current free-plan limits; use a paid plan for anything real
+
+services:
+  - type: web
+    name: saathi-api
+    runtime: docker
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    plan: free
+    autoDeployTrigger: commit
+    healthCheckPath: /healthz        # liveness; /readyz also checks the database
+    envVars:
+      - key: SAATHI_ENV
+        value: sandbox               # refuses to boot with development secrets; demo tools allowed
+      - key: SAATHI_DEMO_TOOLS_ENABLED
+        value: "true"                # seeds the fictional merchants and demo accounts. Set false for a real launch
+      - key: SAATHI_DATABASE_URL
+        fromDatabase:
+          name: saathi-db
+          property: connectionString # postgresql:// is converted to the psycopg driver automatically
+      - key: SAATHI_JWT_SECRET
+        generateValue: true
+      - key: SAATHI_HOST_API_KEY
+        generateValue: true          # copy this value into Vercel as SAATHI_HOST_API_KEY
+      - key: SAATHI_SIM_LATENCY_MS
+        value: "350"
+      - key: SAATHI_CORS_ORIGINS
+        sync: false                  # set after the Vercel deploy, e.g. ["https://your-app.vercel.app"]
+      - key: SAATHI_CORS_ORIGIN_REGEX
+        sync: false                  # optional: Vercel preview URLs, e.g. https://your-app-.*\.vercel\.app
+      - key: SAATHI_SARVAM_API_KEY
+        sync: false                  # optional: turns on language-model understanding

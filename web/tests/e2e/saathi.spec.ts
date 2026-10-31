@@ -16,14 +16,67 @@ test.beforeEach(async ({ request }) => {
   await resetDemo(request);
 });
 
-test("landing offers both entry points; the dashboard is protected", async ({ page }) => {
+test("landing page makes the integration pitch and leads to the product", async ({ page }) => {
   const problems = watchConsole(page);
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Problems solved, not just answered/ })).toBeVisible();
-  await page.getByRole("link", { name: /Sign in as a merchant/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: /Add an AI teammate to the products you already run/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Where Saathi fits in your stack" })).toBeVisible();
+  await expect(page.getByText("Your systems, behind connectors")).toBeVisible();
+  await expect(page.getByText(/saathi-widget/).first()).toBeVisible(); // the embed snippet
+  // the hero walkthrough: scrub to the end and the verified references are there
+  const demo = page.getByRole("slider", { name: "Walkthrough progress" });
+  await demo.fill("17000");
+  await expect(page.getByText("Done and verified")).toBeVisible();
+  await expect(page.getByText("RPL-4471").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Play walkthrough|Pause walkthrough/ })).toBeVisible();
+  // the connection explainer is interactive
+  await page.getByRole("button", { name: "Can't connect" }).click();
+  await expect(page.getByText(/cannot reach the cell site/)).toBeVisible();
+  // sign-in is always one click away, and the dashboard is protected without a session
+  await page.getByRole("link", { name: "Merchant sign in" }).first().click();
   await expect(page).toHaveURL(/\/login/);
   await page.goto("/app/devices");
-  await expect(page).toHaveURL(/\/login/); // no session, no dashboard
+  await expect(page).toHaveURL(/\/login/);
+  await page.goto("/");
+  await page.getByRole("link", { name: /See it inside a dashboard/ }).click();
+  await expect(page).toHaveURL(/\/embed-demo/);
+  expect(problems).toEqual([]);
+});
+
+test("the landing-page Saathi understands the visitor and asks them to sign in", async ({ page }) => {
+  const problems = watchConsole(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Chat with Saathi" }).click();
+  const panel = page.getByRole("dialog", { name: "Chat with Saathi" });
+
+  // a Hinglish problem gets a Hinglish acknowledgement and a way to sign in
+  await panel.getByLabel("Message to Saathi").fill("Mera settlement ruka hua hai");
+  await panel.getByRole("button", { name: "Send message" }).click();
+  await expect(panel.getByText(/pehle sign in karein/)).toBeVisible();
+  await expect(panel.getByRole("link", { name: "Merchant sign in" })).toBeVisible();
+  await expect(panel.getByText(/aapke settlement/)).toBeVisible();
+
+  // it never pretends to have looked at an account
+  await expect(panel.getByText(/main aapke account ka kuch nahi dekh sakta/i)).toBeVisible();
+
+  // someone who is on the support team is sent to the console
+  await panel.getByLabel("Message to Saathi").fill("I'm on the support team");
+  await panel.getByRole("button", { name: "Send message" }).click();
+  const consoleLink = panel.getByRole("link", { name: "Team console sign in" });
+  await expect(consoleLink).toBeVisible();
+
+  // the same conversation is visible in the in-page section
+  await panel.getByRole("button", { name: "Close chat" }).click();
+  const inline = page.getByRole("log", { name: "Conversation with Saathi" }).first();
+  await expect(inline.getByText("Mera settlement ruka hua hai")).toBeVisible();
+
+  // a shared OTP is never invited
+  await page.getByRole("button", { name: "Chat with Saathi" }).click();
+  await page.getByRole("dialog", { name: "Chat with Saathi" }).getByLabel("Message to Saathi").fill("my otp is 482913");
+  await page.getByRole("dialog", { name: "Chat with Saathi" }).getByRole("button", { name: "Send message" }).click();
+  await expect(page.getByRole("dialog", { name: "Chat with Saathi" }).getByText(/never asks/)).toBeVisible();
+  await page.getByRole("dialog", { name: "Chat with Saathi" }).getByRole("link", { name: "Team console sign in" }).last().click();
+  await expect(page).toHaveURL(/\/console/);
   expect(problems).toEqual([]);
 });
 
@@ -341,6 +394,8 @@ test("mobile: the dashboard fits a phone and Saathi opens full screen", async ({
 test.describe("accessibility", () => {
   for (const path of ["/", "/login", "/console/login", "/embed-demo"]) {
     test(`no serious axe violations on ${path}`, async ({ page }) => {
+      // reduced motion shows the walkthrough's final frame, so the scan is deterministic (and covers that path)
+      await page.emulateMedia({ reducedMotion: "reduce" });
       await page.goto(path);
       await page.waitForLoadState("networkidle");
       const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();

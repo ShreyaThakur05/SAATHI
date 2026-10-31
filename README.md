@@ -74,7 +74,7 @@ cd api && uv run python -m app.eval.run                                    # Und
 * [AI pipeline, prompts, evaluation results (including what was *not* measured)](docs/AI.md)
 * [Embedding in a Paytm dashboard](docs/EMBEDDING.md)
 * [Keys and where to get them](docs/KEYS.md)
-* [Deployment and configuration](docs/DEPLOY.md)
+* [Deploy to Render and Vercel, step by step, plus configuration](docs/DEPLOY.md)
 * [Original plan and decisions](docs/PLAN.md)
 
 ## Known limitations

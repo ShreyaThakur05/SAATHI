@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Logo } from "@/components/Logo";
 import { Button, Field, inputClass } from "@/components/ui/primitives";
 import { ApiError, staffApi } from "@/lib/api";
 import { saveSession, useStaff } from "@/lib/auth";
@@ -37,7 +38,8 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-surface p-4">
       <form onSubmit={submit} className="w-full max-w-sm space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm">
         <div>
-          <h1 className="text-xl font-bold text-navy">Saathi console</h1>
+          <Logo size={56} />
+          <h1 className="mt-2 text-xl font-bold text-navy">Saathi console</h1>
           <p className="mt-1 text-sm text-muted">Sign in to review cases and approvals.</p>
         </div>
         <Field label="Email">

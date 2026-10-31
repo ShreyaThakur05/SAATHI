@@ -13,6 +13,7 @@
   --success: #0b7a50;
   --warn: #8f5b00;
   --danger: #b42d2d;
+  --lav: #a78bfa;
 }
 
 @theme inline {
@@ -27,6 +28,7 @@
   --color-success: var(--success);
   --color-warn: var(--warn);
   --color-danger: var(--danger);
+  --color-lav: var(--lav);
   --font-sans: var(--font-inter), var(--font-deva), system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -59,8 +61,19 @@ body {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
 }
+@keyframes saathi-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
 .animate-in { animation: saathi-in 0.25s ease-out both; }
+.animate-float { animation: saathi-float 5s ease-in-out infinite; }
+.animate-float-slow { animation: saathi-float 7s ease-in-out infinite reverse; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@keyframes saathi-wave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
 }

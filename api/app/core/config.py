@@ -1,3 +1,4 @@
+import re
 from functools import lru_cache
 from typing import Literal
 
@@ -18,6 +19,8 @@ class Settings(BaseSettings):
     )
     db_idle_in_tx_timeout_ms: int = 15000
     cors_origins: list[str] = ["http://localhost:3000"]
+    # Optional pattern for preview deployments, e.g. https://.*\.vercel\.app
+    cors_origin_regex: str | None = None
     run_migrations_on_start: bool = False
 
     # Auth. No defaults for secrets in production: validated in create_app().
@@ -44,6 +47,28 @@ class Settings(BaseSettings):
     # Simulation
     sim_latency_ms: int = 350
     sim_refund_polls: int = 2
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _use_psycopg_driver(cls, v: object) -> object:
+        """Hosts hand out postgres:// or postgresql:// URLs; Saathi needs the psycopg v3 driver."""
+        if isinstance(v, str):
+            for prefix in ("postgres://", "postgresql://"):
+                if v.startswith(prefix):
+                    return "postgresql+psycopg://" + v[len(prefix) :]
+        return v
+
+    @field_validator("cors_origin_regex", mode="before")
+    @classmethod
+    def _valid_regex(cls, v: object) -> object:
+        if isinstance(v, str) and not v.strip():
+            return None
+        if isinstance(v, str):
+            try:
+                re.compile(v)  # fail at startup, not on the first request
+            except re.error as exc:
+                raise ValueError(f"SAATHI_CORS_ORIGIN_REGEX is not a valid pattern: {exc}") from exc
+        return v
 
     @field_validator("sarvam_api_key", "anthropic_api_key", mode="before")
     @classmethod

@@ -17,8 +17,11 @@ log = logging.getLogger(__name__)
 
 
 def assert_safe_for_production(settings: Settings) -> None:
-    """Refuse to boot a production deployment that still uses development defaults."""
-    if settings.env != "production":
+    """Refuse to boot any non-local deployment that still uses development secrets.
+
+    `sandbox` (a public demo) may keep demo tools on; `production` may not.
+    """
+    if settings.env == "local":
         return
     problems = []
     if settings.jwt_secret.get_secret_value() == "dev-only-change-me-not-for-production-use":
@@ -27,7 +30,7 @@ def assert_safe_for_production(settings: Settings) -> None:
         problems.append("SAATHI_HOST_API_KEY is the development default")
     if len(settings.jwt_secret.get_secret_value()) < 32:
         problems.append("SAATHI_JWT_SECRET must be at least 32 characters")
-    if settings.demo_tools_enabled:
+    if settings.env == "production" and settings.demo_tools_enabled:
         problems.append("SAATHI_DEMO_TOOLS_ENABLED must be false")
     if problems:
         raise RuntimeError("Unsafe production configuration: " + "; ".join(problems))
@@ -63,6 +66,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
+        allow_origin_regex=settings.cors_origin_regex,
         allow_methods=["GET", "POST"],
         allow_headers=["*"],
     )

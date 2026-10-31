@@ -5,6 +5,7 @@ import { BookOpen, ClipboardList, Gauge, Inbox, ScrollText, Settings, Store } fr
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { Logo } from "@/components/Logo";
 import { TopBar } from "@/components/TopBar";
 import { Badge, Skeleton } from "@/components/ui/primitives";
 import { useStaff, useStaffQuery } from "@/lib/auth";
@@ -48,11 +49,12 @@ export function ConsoleShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
       <aside className="shrink-0 bg-navy text-white lg:w-60">
         <div className="flex items-center justify-between px-5 py-4 lg:block">
-          <Link href="/" className="block">
-            <p className="text-lg font-bold">
-              Saathi <span className="text-brand">console</span>
-            </p>
-            <p className="hidden text-xs text-white/60 lg:block">Team workspace</p>
+          <Link href="/" className="flex items-center gap-2.5">
+            <Logo size={36} className="rounded-full bg-white p-0.5" />
+            <span>
+              <span className="block text-base font-bold leading-tight">Saathi</span>
+              <span className="block text-xs text-white/60">Team console</span>
+            </span>
           </Link>
         </div>
         <nav aria-label="Console" className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-col lg:pb-0">

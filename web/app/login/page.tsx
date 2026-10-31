@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Logo } from "@/components/Logo";
 import { Button, Field, inputClass } from "@/components/ui/primitives";
 import { ApiError, merchantLogin } from "@/lib/api";
 import { saveMerchantSession, useMerchant } from "@/lib/merchantAuth";
@@ -43,8 +44,9 @@ export default function MerchantLogin() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface p-4">
       <div className="w-full max-w-sm">
-        <div className="mb-6 text-center">
-          <p className="text-2xl font-bold text-navy">Business dashboard</p>
+        <div className="mb-6 flex flex-col items-center text-center">
+          <Logo size={72} />
+          <p className="mt-3 text-2xl font-bold text-navy">Business dashboard</p>
           <p className="mt-1 text-sm text-muted">Sign in to manage your devices, settlements and payments.</p>
         </div>
         <form onSubmit={submit} className="space-y-4 rounded-2xl border border-line bg-white p-6 shadow-sm">
